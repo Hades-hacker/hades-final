@@ -6,10 +6,8 @@
     <title>BHAST HOUSE · Complete Luxury Properties Platform</title>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0-beta3/css/all.css">
     <script src="https://js.stripe.com/v3/"></script>
-    <!-- EmailJS SDK for real email sending -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <style>
-        /* ==================== ALL CSS STYLES (unchanged layout) ==================== */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
         body { background: #0a0a0f; color: #e0e0e0; }
         .booking-header { background: #1a1a24; border-bottom: 2px solid #b77dff; padding: 0.5rem 0; position: sticky; top: 0; z-index: 100; }
@@ -48,27 +46,27 @@
         .search-field i { color: #b77dff; }
         .search-field input, .search-field select { border: none; outline: none; width: 100%; background: transparent; color: #e0e0e0; }
         .search-button { background: #b77dff; color: #1a1a24; border: none; border-radius: 6px; padding: 0.8rem 2.5rem; font-weight: 600; cursor: pointer; }
-        .upload-section { background: #1a1a24; border-radius: 16px; padding: 2rem; margin: 2rem 0; border: 1px solid #3a3a48; }
+        .upload-section, .admin-panel, .chat-monitor { background: #1a1a24; border-radius: 16px; padding: 2rem; margin: 2rem 0; border: 1px solid #3a3a48; }
+        .admin-panel { border: 2px solid #b77dff; }
         .upload-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }
         .upload-form input, .upload-form textarea, .upload-form select { background: #2a2a35; border: 1px solid #3a3a48; padding: 0.8rem; border-radius: 8px; color: #e0e0e0; }
         .photo-preview { margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
         .photo-preview-item { width: 80px; height: 80px; background: #2a2a35; border-radius: 8px; overflow: hidden; position: relative; }
         .photo-preview-item img { width: 100%; height: 100%; object-fit: cover; }
         .remove-photo { position: absolute; top: 2px; right: 2px; background: rgba(0,0,0,0.7); border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.7rem; }
-        .upload-btn { background: #b77dff; color: #1a1a24; border: none; padding: 0.8rem 1.5rem; border-radius: 30px; cursor: pointer; font-weight: 600; }
-        .admin-panel { background: #1a1a24; border-radius: 16px; padding: 2rem; margin: 2rem 0; border: 2px solid #b77dff; }
-        .pending-house-card { background: #2a2a35; border-radius: 12px; padding: 1rem; margin-bottom: 1rem; display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; }
-        .pending-house-card img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; }
-        .approve-btn { background: #28a745; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; }
-        .reject-btn { background: #dc3545; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; }
-        .chat-monitor { background: #1a1a24; border-radius: 16px; padding: 2rem; margin: 2rem 0; border: 2px solid #b77dff; }
+        .upload-btn, .admin-action-btn { background: #b77dff; color: #1a1a24; border: none; padding: 0.8rem 1.5rem; border-radius: 30px; cursor: pointer; font-weight: 600; }
+        .pending-house-card, .user-admin-card, .property-admin-card { background: #2a2a35; border-radius: 12px; padding: 1rem; margin-bottom: 1rem; display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+        .pending-house-card img, .property-admin-card img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; }
+        .approve-btn { background: #28a745; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; margin-right: 0.5rem; }
+        .reject-btn, .delete-btn { background: #dc3545; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; }
+        .edit-btn { background: #ffc107; color: #1a1a24; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; margin-right: 0.5rem; }
+        .admin-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .admin-tab { background: #2a2a35; border: 1px solid #3a3a48; padding: 0.6rem 1.2rem; border-radius: 30px; cursor: pointer; }
+        .admin-tab.active { background: #b77dff; color: #1a1a24; border-color: #b77dff; }
         .chat-layout { display: flex; gap: 1.5rem; margin-top: 1rem; min-height: 500px; flex-wrap: wrap; }
         .conversation-list { flex: 1; background: #2a2a35; border-radius: 12px; overflow-y: auto; max-height: 500px; }
         .conversation-item { display: flex; padding: 1rem; border-bottom: 1px solid #3a3a48; cursor: pointer; }
         .conversation-item:hover { background: #3a3a48; }
-        .conv-thumbnail { width: 50px; height: 50px; border-radius: 8px; object-fit: cover; margin-right: 1rem; }
-        .conv-info { flex: 1; }
-        .conv-title { font-weight: 600; color: #b77dff; }
         .message-view { flex: 2; background: #2a2a35; border-radius: 12px; padding: 1rem; overflow-y: auto; max-height: 500px; }
         .admin-message { background: #1a1a24; padding: 0.8rem; border-radius: 8px; margin-bottom: 0.8rem; border-left: 3px solid #b77dff; }
         .property-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
@@ -76,64 +74,29 @@
         .property-card:hover { transform: translateY(-2px); border-color: #b77dff; }
         .card-image { height: 180px; background-size: cover; background-position: center; position: relative; }
         .verified-badge { position: absolute; top: 12px; left: 12px; background: #28a745; color: white; padding: 0.3rem 0.8rem; border-radius: 30px; font-size: 0.7rem; }
-        .multiple-photos-badge { position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.7); padding: 0.2rem 0.5rem; border-radius: 20px; font-size: 0.7rem; }
         .card-content { padding: 1rem; }
         .property-name { font-size: 1.2rem; font-weight: 600; color: #b77dff; }
         .property-location { color: #b0b0b0; font-size: 0.9rem; margin: 0.3rem 0; }
         .price { font-size: 1.3rem; font-weight: 700; color: #b77dff; margin: 0.5rem 0; }
-        .contact-info { font-size: 0.8rem; color: #b0b0b0; margin: 0.3rem 0; }
         .button-group { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
         .book-btn, .chat-btn { background: #b77dff; color: #1a1a24; border: none; border-radius: 6px; padding: 0.5rem 1rem; font-weight: 600; cursor: pointer; flex: 1; }
         .chat-btn { background: #2a2a35; color: #b77dff; border: 1px solid #b77dff; }
-        .payment-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; justify-content: center; align-items: center; }
-        .modal-content { background: #1a1a24; border-radius: 16px; max-width: 600px; width: 95%; max-height: 90vh; overflow-y: auto; border: 2px solid #b77dff; }
-        .modal-header { background: #2a2a35; color: #b77dff; padding: 1rem; border-radius: 16px 16px 0 0; border-bottom: 1px solid #3a3a48; display: flex; justify-content: space-between; align-items: center; }
+        .payment-modal, .chat-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-content, .chat-modal-content { background: #1a1a24; border-radius: 16px; max-width: 600px; width: 95%; max-height: 90vh; overflow-y: auto; border: 2px solid #b77dff; }
+        .modal-header, .chat-header { background: #2a2a35; color: #b77dff; padding: 1rem; border-radius: 16px 16px 0 0; border-bottom: 1px solid #3a3a48; display: flex; justify-content: space-between; align-items: center; }
         .modal-body { padding: 1.5rem; }
         .booking-summary, .booking-dates { background: #2a2a35; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; border: 1px solid #3a3a48; }
         .payment-methods { display: flex; gap: 0.5rem; margin: 1rem 0; flex-wrap: wrap; }
         .payment-method-btn { flex: 1; min-width: 100px; background: #2a2a35; border: 2px solid #3a3a48; border-radius: 8px; padding: 1rem; cursor: pointer; text-align: center; }
         .payment-method-btn.active { border-color: #b77dff; background: #3a3a48; }
         .pay-now-btn { width: 100%; background: #b77dff; color: #1a1a24; border: none; border-radius: 8px; padding: 1.2rem; font-size: 1.2rem; font-weight: 600; margin-top: 1.5rem; cursor: pointer; }
-        
-        /* ========== MODERN CHAT SYSTEM STYLES ========== */
-        .chat-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 2000; justify-content: center; align-items: center; }
-        .chat-modal-content { background: #1a1a24; border-radius: 24px; width: 90%; max-width: 500px; height: 80%; display: flex; flex-direction: column; border: 1px solid rgba(183, 125, 255, 0.3); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); overflow: hidden; }
-        .chat-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #1e1e2a 0%, #2a2a35 100%); border-bottom: 2px solid #b77dff; display: flex; justify-content: space-between; align-items: center; }
-        .chat-header h3 { color: #b77dff; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem; }
-        .chat-header h3 i { font-size: 1.3rem; }
-        .chat-header button { background: rgba(255,255,255,0.1); border: none; color: #b0b0b0; font-size: 1.2rem; cursor: pointer; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
-        .chat-header button:hover { background: #dc3545; color: white; transform: scale(1.05); }
-        .chat-messages { flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 0.8rem; background: #111114; }
-        .message { display: flex; margin-bottom: 0.5rem; animation: fadeInUp 0.2s ease; }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .message.own { justify-content: flex-end; }
-        .message-avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #b77dff, #9b59b6); display: flex; align-items: center; justify-content: center; margin-right: 0.5rem; flex-shrink: 0; }
-        .message.own .message-avatar { margin-right: 0; margin-left: 0.5rem; order: 2; background: linear-gradient(135deg, #2ecc71, #27ae60); }
-        .message-avatar i { color: white; font-size: 0.9rem; }
-        .message-bubble { max-width: 70%; background: #2a2a35; border-radius: 18px; padding: 0.75rem 1rem; position: relative; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
-        .message.own .message-bubble { background: linear-gradient(135deg, #b77dff, #9b59b6); color: white; border-bottom-right-radius: 4px; }
-        .message:not(.own) .message-bubble { border-bottom-left-radius: 4px; }
-        .message-sender { font-size: 0.7rem; color: #b77dff; margin-bottom: 0.2rem; font-weight: 600; }
-        .message.own .message-sender { color: rgba(255,255,255,0.8); text-align: right; }
-        .message-text { font-size: 0.9rem; line-height: 1.4; word-wrap: break-word; }
-        .message-time { font-size: 0.6rem; color: rgba(255,255,255,0.5); margin-top: 0.3rem; text-align: right; }
-        .typing-indicator { display: flex; align-items: center; gap: 4px; padding: 0.5rem 1rem; background: #2a2a35; border-radius: 18px; width: fit-content; margin-bottom: 0.5rem; }
-        .typing-indicator span { width: 8px; height: 8px; background: #b77dff; border-radius: 50%; animation: typing 1.4s infinite ease-in-out; }
-        .typing-indicator span:nth-child(1) { animation-delay: 0s; }
-        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
-        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes typing { 0%, 60%, 100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-6px); opacity: 1; } }
-        .chat-input-container { padding: 1rem; background: #1a1a24; border-top: 1px solid #3a3a48; display: flex; gap: 0.5rem; }
-        .chat-input-container input { flex: 1; background: #2a2a35; border: none; padding: 0.8rem 1rem; border-radius: 30px; color: #e0e0e0; font-size: 0.9rem; outline: none; transition: all 0.2s; }
-        .chat-input-container input:focus { border: 1px solid #b77dff; background: #2f2f3a; }
-        .chat-input-container button { background: #b77dff; border: none; padding: 0.8rem 1.2rem; border-radius: 30px; cursor: pointer; color: #1a1a24; font-weight: 600; transition: all 0.2s; display: flex; align-items: center; gap: 0.5rem; }
-        .chat-input-container button:hover { transform: scale(1.02); background: #a06ecc; }
-        .chat-image-preview { margin-top: 0.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
-        .chat-image-preview img { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; cursor: pointer; }
-        .emoji-picker-btn { background: #2a2a35; border: none; border-radius: 50%; width: 40px; cursor: pointer; color: #b77dff; font-size: 1.2rem; }
-        .unread-badge { background: #dc3545; color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.7rem; margin-left: 0.5rem; }
-        .conversation-item.unread { background: #3a2a4a; border-left: 3px solid #b77dff; }
-        
+        .chat-messages { flex: 1; overflow-y: auto; padding: 1rem; height: 300px; }
+        .message { margin-bottom: 1rem; max-width: 80%; }
+        .message.own { margin-left: auto; text-align: right; }
+        .message-content { background: #2a2a35; padding: 0.5rem 1rem; border-radius: 12px; display: inline-block; }
+        .message.own .message-content { background: #b77dff; color: #1a1a24; }
+        .chat-input { display: flex; padding: 1rem; border-top: 1px solid #3a3a48; }
+        .chat-input input { flex: 1; background: #2a2a35; border: none; padding: 0.5rem; border-radius: 20px; color: #e0e0e0; }
         .dashboard { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 2rem 0; }
         .dashboard-card { background: #1a1a24; border-radius: 12px; padding: 1.5rem; border: 1px solid #3a3a48; }
         .transaction-list, .email-list { max-height: 300px; overflow-y: auto; }
@@ -150,47 +113,42 @@
         body.light-theme .admin-panel, body.light-theme .dashboard-card, body.light-theme .modal-content,
         body.light-theme .chat-modal-content { background: #fff; border-color: #e0e0e0; }
         body.light-theme .property-name, body.light-theme .price { color: #b77dff; }
-        body.light-theme .chat-messages { background: #f0f0f0; }
-        body.light-theme .message-bubble { background: #e0e0e0; color: #333; }
-        body.light-theme .chat-input-container { background: #fff; }
     </style>
 </head>
 <body>
-    <header class="booking-header"><div class="header-container"><div class="header-top"><div class="logo" onclick="location.reload()"><i class="fas fa-home"></i> BHAST HOUSE<span class="api-status"><i class="fas fa-envelope"></i> Real Email | Modern Chat</span></div><div class="user-menu"><button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()"><i class="fas fa-moon"></i> Dark</button><div class="auth-buttons" id="authButtons"><button class="auth-btn" onclick="showLoginModal()"><i class="fas fa-sign-in-alt"></i> Sign In</button><button class="auth-btn" onclick="showSignupModal()"><i class="fas fa-user-plus"></i> Sign Up</button></div><div class="profile-menu" id="profileMenu"><div class="profile-trigger" onclick="toggleProfileDropdown()"><div class="profile-pic" id="profilePicDisplay"><span id="profileInitials">G</span></div><span class="profile-name" id="profileName">Guest</span><i class="fas fa-chevron-down"></i></div><div class="profile-dropdown" id="profileDropdown"><div class="dropdown-item" onclick="openEmailComposer()"><i class="fas fa-envelope"></i> Compose Email</div><div class="dropdown-item" onclick="openEmailCenter()"><i class="fas fa-inbox"></i> Email Center</div><div class="dropdown-item" onclick="showMyConversations()"><i class="fas fa-comments"></i> My Chats</div><div class="dropdown-item logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sign Out</div></div></div></div></div><nav class="booking-nav"><a class="active" onclick="filterByType('all')"><i class="fas fa-home"></i> All</a><a onclick="filterByType('house')">Houses</a><a onclick="filterByType('penthouse')">Penthouses</a><a onclick="filterByType('mansion')">Mansions</a><a onclick="filterByType('villa')">Villas</a><a onclick="filterByType('cottage')">Cottages</a><a onclick="showUploadForm()"><i class="fas fa-upload"></i> List House</a><a id="adminBtn" onclick="showAdminPanel()" style="display:none;"><i class="fas fa-crown"></i> Admin</a><a id="chatMonitorBtn" onclick="showChatMonitor()" style="display:none;"><i class="fas fa-comment-dots"></i> Chat Monitor</a></nav></div></header>
+    <header class="booking-header"><div class="header-container"><div class="header-top"><div class="logo" onclick="location.reload()"><i class="fas fa-home"></i> BHAST HOUSE<span class="api-status"><i class="fas fa-crown"></i> Full Admin Control | Live</span></div><div class="user-menu"><button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()"><i class="fas fa-moon"></i> Dark</button><div class="auth-buttons" id="authButtons"><button class="auth-btn" onclick="showLoginModal()"><i class="fas fa-sign-in-alt"></i> Sign In</button><button class="auth-btn" onclick="showSignupModal()"><i class="fas fa-user-plus"></i> Sign Up</button></div><div class="profile-menu" id="profileMenu"><div class="profile-trigger" onclick="toggleProfileDropdown()"><div class="profile-pic" id="profilePicDisplay"><span id="profileInitials">G</span></div><span class="profile-name" id="profileName">Guest</span><i class="fas fa-chevron-down"></i></div><div class="profile-dropdown" id="profileDropdown"><div class="dropdown-item" onclick="openEmailComposer()"><i class="fas fa-envelope"></i> Compose Email</div><div class="dropdown-item" onclick="openEmailCenter()"><i class="fas fa-inbox"></i> Email Center</div><div class="dropdown-item" onclick="showMyConversations()"><i class="fas fa-comments"></i> My Chats</div><div class="dropdown-item logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sign Out</div></div></div></div></div><nav class="booking-nav"><a class="active" onclick="filterByType('all')"><i class="fas fa-home"></i> All</a><a onclick="filterByType('house')">Houses</a><a onclick="filterByType('penthouse')">Penthouses</a><a onclick="filterByType('mansion')">Mansions</a><a onclick="filterByType('villa')">Villas</a><a onclick="filterByType('cottage')">Cottages</a><a onclick="showUploadForm()"><i class="fas fa-upload"></i> List House</a><a id="adminBtn" onclick="showAdminPanel()" style="display:none;"><i class="fas fa-crown"></i> Admin Portal</a><a id="chatMonitorBtn" onclick="showChatMonitor()" style="display:none;"><i class="fas fa-comment-dots"></i> Chat Monitor</a></nav></div></header>
     <main class="main-container">
         <div class="search-hero"><h1>Find your perfect Kenyan home</h1><p>Luxury penthouses, mansions, villas across Kenya</p><div class="booking-search"><div class="search-field"><i class="fas fa-map-pin"></i><select id="locationSelect"><option value="all">All Areas</option><option>Karen</option><option>Westlands</option><option>Runda</option><option>Diani</option><option>Naivasha</option></select></div><div class="search-field"><i class="fas fa-calendar"></i><input type="text" value="Mar 15-20"></div><div class="search-field"><i class="fas fa-user"></i><select id="globalGuests"><option>2 guests</option><option>4 guests</option><option>6 guests</option></select></div><button class="search-button" onclick="searchProperties()">Search</button></div></div>
-        <div id="uploadForm" class="upload-section" style="display:none;"><h2>List Your House</h2><div class="upload-form"><input type="text" id="houseTitle" placeholder="Title"><input type="text" id="housePlace" placeholder="Area"><input type="text" id="contactNumber" placeholder="Contact"><input type="number" id="nightlyRate" placeholder="Price/night (KES)"><select id="houseType"><option value="house">House</option><option value="penthouse">Penthouse</option><option value="villa">Villa</option></select><textarea id="houseDescription" placeholder="Description"></textarea><div><button class="upload-btn" onclick="document.getElementById('housePhotos').click()">Select Photos</button><input type="file" id="housePhotos" accept="image/*" multiple style="display:none;" onchange="previewPhotos(this)"><div class="photo-preview" id="photoPreview"></div></div><button class="upload-btn" onclick="uploadHouse()">Submit for Approval</button></div></div>
-        <div id="adminPanel" class="admin-panel" style="display:none;"><h2>Admin Panel</h2><div id="pendingHousesList"></div></div>
-        <div id="chatMonitor" class="chat-monitor" style="display:none;"><h2>Chat Monitor</h2><div class="chat-layout"><div class="conversation-list" id="conversationList"></div><div class="message-view" id="messageView"><p>Select a conversation</p></div></div></div>
+        <div id="uploadForm" class="upload-section" style="display:none;"><h2><i class="fas fa-upload"></i> List Your House</h2><div class="upload-form"><input type="text" id="houseTitle" placeholder="Title"><input type="text" id="housePlace" placeholder="Area"><input type="text" id="contactNumber" placeholder="Contact"><input type="number" id="nightlyRate" placeholder="Price/night (KES)"><select id="houseType"><option value="house">House</option><option value="penthouse">Penthouse</option><option value="villa">Villa</option><option value="mansion">Mansion</option></select><textarea id="houseDescription" placeholder="Description"></textarea><div><button class="upload-btn" onclick="document.getElementById('housePhotos').click()">Select Photos</button><input type="file" id="housePhotos" accept="image/*" multiple style="display:none;" onchange="previewPhotos(this)"><div class="photo-preview" id="photoPreview"></div></div><button class="upload-btn" onclick="uploadHouse()">Submit for Approval</button></div></div>
+        
+        <!-- Enhanced Admin Panel with Full Control -->
+        <div id="adminPanel" class="admin-panel" style="display:none;">
+            <h2><i class="fas fa-crown"></i> Admin Control Center</h2>
+            <div class="admin-hint" style="background:#2a2a35; padding:0.8rem; border-radius:8px; margin-bottom:1rem;"><i class="fas fa-shield-alt"></i> Full administrative privileges: Approve/Reject Properties, Manage Users, Delete Listings</div>
+            <div class="admin-tabs">
+                <div class="admin-tab active" onclick="switchAdminTab('pending')">📋 Pending Approvals</div>
+                <div class="admin-tab" onclick="switchAdminTab('properties')">🏠 Manage All Properties</div>
+                <div class="admin-tab" onclick="switchAdminTab('users')">👥 Manage Users</div>
+            </div>
+            <div id="pendingSection"><div id="pendingHousesList"></div></div>
+            <div id="propertiesSection" style="display:none;"><div id="allPropertiesList"></div></div>
+            <div id="usersSection" style="display:none;"><div id="usersList"></div></div>
+        </div>
+        
+        <div id="chatMonitor" class="chat-monitor" style="display:none;"><h2><i class="fas fa-comment-dots"></i> Chat Monitor</h2><div class="chat-layout"><div class="conversation-list" id="conversationList"></div><div class="message-view" id="messageView"><p>Select a conversation</p></div></div></div>
         <div class="property-grid" id="propertyGrid"></div>
-        <div class="dashboard"><div class="dashboard-card"><h3><i class="fas fa-history"></i> Recent Bookings</h3><div class="transaction-list" id="transactionHistory"></div></div><div class="dashboard-card"><h3><i class="fas fa-envelope"></i> Email Inbox <span class="email-prompt-badge" onclick="openEmailCenter()"><i class="fas fa-inbox"></i> View All</span></h3><div class="email-list" id="emailHistory"></div></div></div>
+        <div class="dashboard"><div class="dashboard-card"><h3><i class="fas fa-history"></i> Recent Bookings</h3><div class="transaction-list" id="transactionHistory"></div></div><div class="dashboard-card"><h3><i class="fas fa-envelope"></i> Notifications <span class="email-prompt-badge" onclick="openEmailCenter()"><i class="fas fa-inbox"></i> Inbox</span></h3><div class="email-list" id="emailHistory"></div></div></div>
     </main>
     <div class="compose-float" onclick="openEmailComposer()"><i class="fas fa-envelope fa-lg"></i></div>
-    
-    <!-- MODERN CHAT MODAL -->
-    <div class="chat-modal" id="chatModal">
-        <div class="chat-modal-content">
-            <div class="chat-header">
-                <h3><i class="fas fa-comment-dots"></i> <span id="chatTitle">Chat</span></h3>
-                <button onclick="closeChatModal()"><i class="fas fa-times"></i></button>
-            </div>
-            <div class="chat-messages" id="chatMessages"></div>
-            <div class="chat-input-container">
-                <input type="text" id="chatInput" placeholder="Type a message..." onkeypress="if(event.key==='Enter') sendChatMessage()">
-                <button onclick="sendChatMessage()"><i class="fas fa-paper-plane"></i> Send</button>
-            </div>
-        </div>
-    </div>
-    
     <div class="payment-modal" id="paymentModal"><div class="modal-content"><div class="modal-header"><h3>Complete Booking</h3><button class="close-btn" onclick="closePaymentModal()">✕</button></div><div class="modal-body"><div class="booking-summary" id="bookingSummary"></div><div class="booking-dates"><input type="date" id="checkInDate"><input type="date" id="checkOutDate"></div><div class="payment-methods"><div class="payment-method-btn active" onclick="selectPaymentMethod('mpesa')"><i class="fas fa-mobile-alt"></i> M-PESA</div><div class="payment-method-btn" onclick="selectPaymentMethod('card')"><i class="fab fa-cc-visa"></i> Card</div></div><div class="payment-form" id="paymentForm"></div><button class="pay-now-btn" onclick="processPayment()">Pay Now</button><div class="payment-status" id="paymentStatus"></div></div></div></div>
-    <div id="loginModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:2000; justify-content:center; align-items:center;"><div style="background:#1a1a24; padding:2rem; border-radius:16px; max-width:400px;"><h3>Sign In</h3><input type="text" id="loginUsername" placeholder="Username" style="width:100%; margin:0.5rem 0; padding:0.8rem; background:#2a2a35; border-radius:8px;"><input type="password" id="loginPassword" placeholder="Password" style="width:100%; margin:0.5rem 0; padding:0.8rem; background:#2a2a35; border-radius:8px;"><button onclick="login()" style="width:100%; padding:0.8rem; background:#b77dff; border:none; border-radius:8px;">Sign In</button><p style="margin-top:1rem; font-size:0.8rem;">Demo: demo/password123 | Admin: bhast_admin/bhast2025</p><button onclick="closeLoginModal()" style="margin-top:1rem;">Close</button></div></div>
+    <div class="chat-modal" id="chatModal"><div class="chat-modal-content"><div class="chat-header"><h3 id="chatTitle">Chat</h3><button onclick="closeChatModal()">✕</button></div><div class="chat-messages" id="chatMessages"></div><div class="chat-input"><input type="text" id="chatInput" placeholder="Type message..." onkeypress="if(event.key==='Enter') sendChatMessage()"><button onclick="sendChatMessage()">Send</button></div></div></div>
+    <div id="loginModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:2000; justify-content:center; align-items:center;"><div style="background:#1a1a24; padding:2rem; border-radius:16px; max-width:400px;"><h3>Sign In</h3><div class="admin-hint" style="margin-bottom:1rem;"><i class="fas fa-crown"></i> Admin: bhast_admin / bhast2025</div><input type="text" id="loginUsername" placeholder="Username or Email" style="width:100%; margin:0.5rem 0; padding:0.8rem; background:#2a2a35; border-radius:8px;"><input type="password" id="loginPassword" placeholder="Password" style="width:100%; margin:0.5rem 0; padding:0.8rem; background:#2a2a35; border-radius:8px;"><button onclick="login()" style="width:100%; padding:0.8rem; background:#b77dff; border:none; border-radius:8px;">Sign In</button><p style="margin-top:1rem; font-size:0.8rem;">Demo: demo/password123 | Admin: bhast_admin/bhast2025</p><button onclick="closeLoginModal()" style="margin-top:1rem;">Close</button></div></div>
     <div class="toast" id="toast"><i class="fas fa-check-circle"></i><span id="toastMsg"></span></div>
     <footer class="booking-footer"><div class="footer-container"><div class="footer-section"><h4>BHAST HOUSE</h4><a>About</a></div><div class="footer-section"><h4>Properties</h4><a onclick="filterByType('house')">Houses</a><a onclick="filterByType('villa')">Villas</a></div></div></footer>
 
     <script>
-        // EmailJS Configuration (replace with your keys for real email)
+        // EmailJS init
         (function() { emailjs.init("YOUR_EMAILJS_PUBLIC_KEY"); })();
-        const EMAILJS_ENABLED = false;
         
         // Core Data
         let users = JSON.parse(localStorage.getItem('bhast_users')) || [];
@@ -202,14 +160,17 @@
         let emailLog = JSON.parse(localStorage.getItem('bhast_emails')) || [];
         let uploadedPhotos = [];
         
+        // Seed data
         if (users.length === 0) {
-            users.push({ id: 'user_1', name: 'Demo User', username: 'demo', email: 'demo@example.com', password: 'password123', role: 'user' });
-            users.push({ id: 'admin_1', name: 'Bhast Admin', username: 'bhast_admin', email: 'admin@bhast.house', password: 'bhast2025', role: 'admin' });
+            users.push({ id: 'user_1', name: 'Demo User', username: 'demo', email: 'demo@example.com', password: 'password123', role: 'user', joined: new Date().toLocaleDateString() });
+            users.push({ id: 'admin_1', name: 'Bhast Admin', username: 'bhast_admin', email: 'admin@bhast.house', password: 'bhast2025', role: 'admin', joined: new Date().toLocaleDateString() });
+            users.push({ id: 'user_2', name: 'John Kamau', username: 'john', email: 'john@example.com', password: 'john123', role: 'user', joined: new Date().toLocaleDateString() });
             localStorage.setItem('bhast_users', JSON.stringify(users));
         }
         if (houses.length === 0) {
             houses = [{ id: 1, title: "Skyline Penthouse", place: "Karen", contact_number: "+254712345678", nightly_rate: 63000, photos: ["https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800"], is_verified: true, host_id: "admin_1", type: "penthouse" },
-                       { id: 2, title: "Modern Glass Villa", place: "Westlands", nightly_rate: 120000, photos: ["https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800"], is_verified: true, host_id: "admin_1", type: "villa" }];
+                       { id: 2, title: "Modern Glass Villa", place: "Westlands", nightly_rate: 120000, photos: ["https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800"], is_verified: true, host_id: "admin_1", type: "villa" },
+                       { id: 3, title: "Pending Mansion", place: "Runda", nightly_rate: 250000, photos: ["https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800"], is_verified: false, host_id: "user_1", type: "mansion" }];
             localStorage.setItem('bhast_houses', JSON.stringify(houses));
         }
         
@@ -217,91 +178,68 @@
         let currentConversation = null;
         let currentBooking = null;
         let selectedMethod = 'mpesa';
+        let currentAdminTab = 'pending';
         
-        // Email functions (same as before)
-        async function sendRealEmail(toEmail, subject, messageBody) { console.log("Email:", toEmail, subject); return false; }
+        // Email functions
         function sendEmail(to, subject, body) { const emailObj = { id: Date.now(), from: currentUser?.email || 'system', to, subject, body, time: new Date().toLocaleString() }; emailLog.unshift(emailObj); localStorage.setItem('bhast_emails', JSON.stringify(emailLog)); updateEmailHistory(); showToast(`✉️ Email sent to ${to}`); return true; }
-        function openEmailComposer(presetTo = '') { if(!currentUser) { showToast('Please login first'); showLoginModal(); return; } const recipient = prompt("Enter recipient email:", presetTo || "admin@bhast.house"); if(!recipient) return; const subject = prompt("Subject:", "Property Inquiry"); if(subject === null) return; const body = prompt("Message:", `Hello,\n\nI'm interested.\n\nBest,\n${currentUser.name}`); if(body !== null) sendEmail(recipient, subject, body); }
+        function openEmailComposer(presetTo = '') { if(!currentUser) { showToast('Please login first'); showLoginModal(); return; } const recipient = prompt("Enter recipient email:", presetTo || "admin@bhast.house"); if(!recipient) return; const subject = prompt("Subject:", "Property Inquiry"); if(subject === null) return; const body = prompt("Message:", `Hello,\n\nBest,\n${currentUser.name}`); if(body !== null) sendEmail(recipient, subject, body); }
         function openEmailCenter() { if(!currentUser) { showToast('Login to access emails'); showLoginModal(); return; } let userEmails = emailLog.filter(e => e.to === currentUser.email || e.from === currentUser.email); alert(`📬 EMAILS (${userEmails.length})\n\n${userEmails.map(e => `${e.time}\n${e.from === currentUser.email ? '📤 To:'+e.to : '📥 From:'+e.from}\n${e.subject}`).join('\n---\n') || 'No emails'}`); }
-        function updateEmailHistory() { const div = document.getElementById('emailHistory'); let userEmails = emailLog.filter(e => e.to === (currentUser?.email) || e.from === (currentUser?.email)).slice(0,5); div.innerHTML = userEmails.map(e => `<div class="email-item"><strong>${e.from === currentUser?.email ? '📤 To: '+e.to : '📥 From: '+e.from}</strong><div>${e.subject}</div><div style="font-size:0.7rem;">${e.time}</div><button style="margin-top:4px; background:#b77dff20; border:none; border-radius:12px; padding:2px 8px; cursor:pointer;" onclick="alert('${escapeHtml(e.body)}')">View</button></div>`).join('') || '<div>No emails</div>'; }
+        function updateEmailHistory() { const div = document.getElementById('emailHistory'); let userEmails = emailLog.filter(e => e.to === (currentUser?.email) || e.from === (currentUser?.email)).slice(0,5); div.innerHTML = userEmails.map(e => `<div class="email-item"><strong>${e.from === currentUser?.email ? '📤 To: '+e.to : '📥 From: '+e.from}</strong><div>${e.subject}</div><div style="font-size:0.7rem;">${e.time}</div></div>`).join('') || '<div>No emails</div>'; }
         
-        // MODERN CHAT FUNCTIONS
-        function loadChatMessages(convId) {
-            const convMessages = messages.filter(m => m.conversation_id === convId).sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));
-            const container = document.getElementById('chatMessages');
-            container.innerHTML = convMessages.map(m => {
-                const sender = users.find(u => u.id === m.sender_id);
-                const isOwn = m.sender_id === currentUser?.id;
-                return `<div class="message ${isOwn ? 'own' : ''}">
-                    <div class="message-avatar"><i class="fas ${isOwn ? 'fa-user-check' : 'fa-user-circle'}"></i></div>
-                    <div class="message-bubble">
-                        <div class="message-sender">${isOwn ? 'You' : (sender?.name || 'User')}</div>
-                        <div class="message-text">${escapeHtml(m.content)}</div>
-                        <div class="message-time">${new Date(m.created_at).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div>
-                    </div>
-                </div>`;
-            }).join('');
-            container.scrollTop = container.scrollHeight;
-        }
+        // Admin Functions - Full Control
+        function switchAdminTab(tab) { currentAdminTab = tab; document.querySelectorAll('.admin-tab').forEach((t, i) => { t.classList.remove('active'); }); event.target.classList.add('active'); document.getElementById('pendingSection').style.display = tab === 'pending' ? 'block' : 'none'; document.getElementById('propertiesSection').style.display = tab === 'properties' ? 'block' : 'none'; document.getElementById('usersSection').style.display = tab === 'users' ? 'block' : 'none'; if(tab === 'pending') loadPendingHouses(); if(tab === 'properties') loadAllProperties(); if(tab === 'users') loadAllUsers(); }
         
-        function sendChatMessage() {
-            const input = document.getElementById('chatInput');
-            const content = input.value.trim();
-            if (!content || !currentConversation) return;
-            const newMsg = { id: 'msg_'+Date.now(), content, sender_id: currentUser.id, conversation_id: currentConversation.id, created_at: new Date().toISOString() };
-            messages.push(newMsg);
-            localStorage.setItem('bhast_messages', JSON.stringify(messages));
-            loadChatMessages(currentConversation.id);
-            input.value = '';
-            // Auto-focus back
-            input.focus();
-        }
+        function loadPendingHouses() { const pending = houses.filter(h => !h.is_verified); document.getElementById('pendingHousesList').innerHTML = pending.map(h => `<div class="pending-house-card"><img src="${h.photos?.[0]||'https://via.placeholder.com/80'}"><div><strong>${h.title}</strong><br>${h.place}<br>KES ${h.nightly_rate.toLocaleString()}<br><small>Host: ${users.find(u=>u.id===h.host_id)?.name || 'Unknown'}</small></div><div><button class="approve-btn" onclick="approveHouse(${h.id})"><i class="fas fa-check"></i> Approve</button><button class="reject-btn" onclick="rejectHouse(${h.id})"><i class="fas fa-times"></i> Reject</button></div></div>`).join('') || '<p style="text-align:center;">No pending approvals</p>'; }
         
-        function startChat(houseId) {
-            if (!currentUser) { showToast('Please login to chat'); showLoginModal(); return; }
-            const house = houses.find(h => h.id === houseId);
-            if (!house) return;
-            let conversation = conversations.find(c => c.house_id === houseId && c.participants.includes(currentUser.id));
-            if (!conversation) {
-                conversation = { id: 'conv_'+Date.now(), house_id: houseId, participants: [currentUser.id, house.host_id], created_at: new Date().toISOString() };
-                conversations.push(conversation);
-                localStorage.setItem('bhast_conversations', JSON.stringify(conversations));
-            }
-            currentConversation = conversation;
-            document.getElementById('chatTitle').innerHTML = `<i class="fas fa-home"></i> ${house.title}`;
-            loadChatMessages(conversation.id);
-            document.getElementById('chatModal').style.display = 'flex';
-            document.getElementById('chatInput').focus();
-        }
+        function loadAllProperties() { const allProps = houses; document.getElementById('allPropertiesList').innerHTML = allProps.map(h => `<div class="property-admin-card"><img src="${h.photos?.[0]||'https://via.placeholder.com/80'}"><div><strong>${h.title}</strong><br>${h.place}<br>KES ${h.nightly_rate.toLocaleString()}<br><span style="color:${h.is_verified ? '#28a745' : '#ffc107'}">${h.is_verified ? '✓ Verified' : '⏳ Pending'}</span></div><div><button class="edit-btn" onclick="editProperty(${h.id})"><i class="fas fa-edit"></i> Edit</button><button class="delete-btn" onclick="deletePropertyPermanently(${h.id})"><i class="fas fa-trash"></i> Delete</button></div></div>`).join(''); }
         
-        function closeChatModal() { document.getElementById('chatModal').style.display = 'none'; currentConversation = null; }
+        function loadAllUsers() { const allUsers = users.filter(u => u.role !== 'admin'); document.getElementById('usersList').innerHTML = allUsers.map(u => `<div class="user-admin-card"><div><i class="fas fa-user-circle" style="font-size:2rem; color:#b77dff;"></i></div><div><strong>${u.name}</strong><br>${u.email}<br><small>Joined: ${u.joned || 'N/A'}</small></div><div><button class="edit-btn" onclick="editUser('${u.id}')"><i class="fas fa-edit"></i> Edit</button><button class="delete-btn" onclick="deleteUserAccount('${u.id}')"><i class="fas fa-user-slash"></i> Remove User</button></div></div>`).join('') || '<p>No regular users</p>'; }
         
-        // All other original functions preserved
+        function approveHouse(id) { const idx = houses.findIndex(h => h.id === id); if(idx !== -1) { houses[idx].is_verified = true; localStorage.setItem('bhast_houses', JSON.stringify(houses)); loadPendingHouses(); if(currentAdminTab === 'properties') loadAllProperties(); renderProperties(); const host = users.find(u => u.id === houses[idx].host_id); sendEmail(host?.email || 'user@example.com', `Property Approved: ${houses[idx].title}`, `Congratulations! Your property "${houses[idx].title}" has been approved and is now live on BHAST HOUSE.`); showToast('✅ Property approved & email sent'); } }
+        
+        function rejectHouse(id) { const house = houses.find(h => h.id === id); if(house) { const host = users.find(u => u.id === house.host_id); sendEmail(host?.email || 'user@example.com', `Property Update: ${house.title}`, `Your property "${house.title}" requires revisions. Please check the listing details and resubmit.`); } houses = houses.filter(h => h.id !== id); localStorage.setItem('bhast_houses', JSON.stringify(houses)); loadPendingHouses(); if(currentAdminTab === 'properties') loadAllProperties(); renderProperties(); showToast('❌ Property rejected & notified'); }
+        
+        function deletePropertyPermanently(id) { if(confirm('⚠️ Delete this property permanently? This action cannot be undone.')) { const house = houses.find(h => h.id === id); houses = houses.filter(h => h.id !== id); localStorage.setItem('bhast_houses', JSON.stringify(houses)); loadAllProperties(); renderProperties(); sendEmail(house?.host_id === currentUser?.id ? currentUser.email : 'admin@bhast.house', `Property Removed: ${house?.title}`, `Your property "${house?.title}" has been removed by admin.`); showToast('🗑️ Property deleted permanently'); } }
+        
+        function editProperty(id) { const house = houses.find(h => h.id === id); if(house) { const newRate = prompt('Edit nightly rate (KES):', house.nightly_rate); if(newRate && !isNaN(newRate)) { house.nightly_rate = parseInt(newRate); const newTitle = prompt('Edit property title:', house.title); if(newTitle) house.title = newTitle; localStorage.setItem('bhast_houses', JSON.stringify(houses)); loadAllProperties(); renderProperties(); showToast('✏️ Property updated'); } } }
+        
+        function deleteUserAccount(userId) { if(confirm('⚠️ Remove this user and all their properties? This is permanent!')) { const user = users.find(u => u.id === userId); if(user && user.role !== 'admin') { houses = houses.filter(h => h.host_id !== userId); users = users.filter(u => u.id !== userId); localStorage.setItem('bhast_users', JSON.stringify(users)); localStorage.setItem('bhast_houses', JSON.stringify(houses)); loadAllUsers(); renderProperties(); sendEmail(user.email, 'Account Removed', 'Your account has been removed by administrator.'); showToast(`👤 User ${user.name} removed`); } else { showToast('Cannot remove admin account'); } } }
+        
+        function editUser(userId) { const user = users.find(u => u.id === userId); if(user && user.role !== 'admin') { const newName = prompt('Edit user name:', user.name); if(newName) user.name = newName; localStorage.setItem('bhast_users', JSON.stringify(users)); loadAllUsers(); showToast('✏️ User updated'); } }
+        
+        // Rest of the original functions
         function renderProperties() { let filtered = houses.filter(h => h.is_verified); if (currentFilter.type !== 'all') filtered = filtered.filter(h => h.type === currentFilter.type); if (currentFilter.area !== 'all') filtered = filtered.filter(h => h.place === currentFilter.area); document.getElementById('propertyGrid').innerHTML = filtered.map(h => `<div class="property-card"><div class="card-image" style="background-image: url('${h.photos?.[0]||'https://via.placeholder.com/300'}');"><span class="verified-badge">✓ Verified</span></div><div class="card-content"><div class="property-name">${h.title}</div><div class="property-location"><i class="fas fa-map-marker-alt"></i> ${h.place}</div><div class="price">KES ${h.nightly_rate.toLocaleString()}/night</div><div class="button-group"><button class="book-btn" onclick="openPaymentModal(${h.id})">Book Now</button><button class="chat-btn" onclick="startChat(${h.id})"><i class="fas fa-comment"></i> Chat</button></div></div></div>`).join(''); }
+        
         function openPaymentModal(houseId) { if (!currentUser) { showToast('Please login'); showLoginModal(); return; } const house = houses.find(h => h.id === houseId); if (!house) return; currentBooking = { houseId: house.id, property: house.title, price: house.nightly_rate }; const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1); document.getElementById('checkInDate').valueAsDate = new Date(); document.getElementById('checkOutDate').valueAsDate = tomorrow; updateBookingSummary(); updatePaymentForm(); document.getElementById('paymentModal').style.display = 'flex'; }
         function updateBookingSummary() { const checkIn = new Date(document.getElementById('checkInDate').value); const checkOut = new Date(document.getElementById('checkOutDate').value); const nights = Math.ceil((checkOut - checkIn) / (1000*3600*24)) || 1; const total = currentBooking.price * nights; document.getElementById('bookingSummary').innerHTML = `<div class="summary-row"><span>${currentBooking.property}</span><span>${nights} nights</span></div><div class="summary-row"><span>Total</span><span>KES ${total.toLocaleString()}</span></div>`; return { nights, total }; }
         function updatePaymentForm() { const form = document.getElementById('paymentForm'); if (selectedMethod === 'mpesa') form.innerHTML = `<input type="tel" id="mpesaPhone" placeholder="M-PESA Number" value="254712345678">`; else form.innerHTML = `<input type="text" placeholder="Card details (demo)">`; }
         function selectPaymentMethod(method) { selectedMethod = method; document.querySelectorAll('.payment-method-btn').forEach(btn => btn.classList.remove('active')); event.currentTarget.classList.add('active'); updatePaymentForm(); }
         function closePaymentModal() { document.getElementById('paymentModal').style.display = 'none'; }
         async function processPayment() { const { total } = updateBookingSummary(); const statusDiv = document.getElementById('paymentStatus'); statusDiv.style.display = 'block'; statusDiv.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Processing...'; setTimeout(() => { const transaction = { id: 'TXN_'+Date.now(), method: selectedMethod, amount: total, property: currentBooking.property, timestamp: new Date().toLocaleString() }; transactions.unshift(transaction); localStorage.setItem('bhast_transactions', JSON.stringify(transactions)); sendEmail(currentUser.email, `Booking Confirmed: ${currentBooking.property}`, `Your booking for ${currentBooking.property} is confirmed! Total: KES ${total}.`); updateTransactionHistory(); statusDiv.innerHTML = '<i class="fas fa-check-circle"></i> Payment successful!'; showToast('✅ Booking confirmed!'); setTimeout(() => { document.getElementById('paymentModal').style.display = 'none'; }, 2000); }, 1500); }
+        
+        function startChat(houseId) { if (!currentUser) { showToast('Please login'); showLoginModal(); return; } const house = houses.find(h => h.id === houseId); let conversation = conversations.find(c => c.house_id === houseId && c.participants.includes(currentUser.id)); if (!conversation) { conversation = { id: 'conv_'+Date.now(), house_id: houseId, participants: [currentUser.id, house.host_id], created_at: new Date().toISOString() }; conversations.push(conversation); localStorage.setItem('bhast_conversations', JSON.stringify(conversations)); } currentConversation = conversation; document.getElementById('chatTitle').innerHTML = `Chat about ${house.title}`; loadChatMessages(conversation.id); document.getElementById('chatModal').style.display = 'flex'; }
+        function loadChatMessages(convId) { const convMessages = messages.filter(m => m.conversation_id === convId).sort((a,b)=>new Date(a.created_at)-new Date(b.created_at)); document.getElementById('chatMessages').innerHTML = convMessages.map(m => `<div class="message ${m.sender_id === currentUser?.id ? 'own' : ''}"><div class="message-content">${escapeHtml(m.content)}<div style="font-size:0.7rem;">${new Date(m.created_at).toLocaleTimeString()}</div></div></div>`).join(''); }
+        function sendChatMessage() { const input = document.getElementById('chatInput'); const content = input.value.trim(); if (!content || !currentConversation) return; const newMsg = { id: 'msg_'+Date.now(), content, sender_id: currentUser.id, conversation_id: currentConversation.id, created_at: new Date().toISOString() }; messages.push(newMsg); localStorage.setItem('bhast_messages', JSON.stringify(messages)); loadChatMessages(currentConversation.id); input.value = ''; }
+        function closeChatModal() { document.getElementById('chatModal').style.display = 'none'; currentConversation = null; }
         function showChatMonitor() { if(currentUser?.role !== 'admin') { showToast('Admin only'); return; } document.getElementById('chatMonitor').style.display = 'block'; loadAdminConversations(); }
         function loadAdminConversations() { document.getElementById('conversationList').innerHTML = conversations.map(conv => `<div class="conversation-item" onclick="loadAdminMessages('${conv.id}')"><div class="conv-info"><div class="conv-title">Conv ${conv.id}</div></div></div>`).join(''); }
         function loadAdminMessages(convId) { const convMessages = messages.filter(m => m.conversation_id === convId); document.getElementById('messageView').innerHTML = convMessages.map(m => `<div class="admin-message"><strong>${m.sender_id}</strong>: ${escapeHtml(m.content)}</div>`).join('') || '<p>No messages</p>'; }
-        function uploadHouse() { if (!currentUser) { showToast('Login required'); return; } const newHouse = { id: Date.now(), title: document.getElementById('houseTitle').value, place: document.getElementById('housePlace').value, contact_number: document.getElementById('contactNumber').value, nightly_rate: parseFloat(document.getElementById('nightlyRate').value), photos: uploadedPhotos.length ? uploadedPhotos : ['https://via.placeholder.com/300'], is_verified: false, host_id: currentUser.id, type: document.getElementById('houseType').value }; if (!newHouse.title) { showToast('Enter title'); return; } houses.push(newHouse); localStorage.setItem('bhast_houses', JSON.stringify(houses)); sendEmail(currentUser.email, `Property Submitted: ${newHouse.title}`, `Your property has been submitted.`); showToast('✅ House submitted!'); document.getElementById('uploadForm').style.display = 'none'; if(currentUser.role === 'admin') loadPendingHouses(); }
-        function loadPendingHouses() { const pending = houses.filter(h => !h.is_verified); document.getElementById('pendingHousesList').innerHTML = pending.map(h => `<div class="pending-house-card"><div><strong>${h.title}</strong><br>${h.place}<br>KES ${h.nightly_rate}</div><div><button class="approve-btn" onclick="approveHouse(${h.id})">✓ Approve</button><button class="reject-btn" onclick="rejectHouse(${h.id})">✗ Reject</button></div></div>`).join(''); }
-        function approveHouse(id) { const idx = houses.findIndex(h => h.id === id); if(idx !== -1) { houses[idx].is_verified = true; localStorage.setItem('bhast_houses', JSON.stringify(houses)); loadPendingHouses(); renderProperties(); sendEmail('admin@bhast.house', 'Property Approved', `Property "${houses[idx].title}" approved`); showToast('Approved'); } }
-        function rejectHouse(id) { houses = houses.filter(h => h.id !== id); localStorage.setItem('bhast_houses', JSON.stringify(houses)); loadPendingHouses(); renderProperties(); showToast('Rejected'); }
-        function showAdminPanel() { if(currentUser?.role !== 'admin') { showToast('Admin only'); return; } document.getElementById('adminPanel').style.display = 'block'; loadPendingHouses(); }
-        function showUploadForm() { if (!currentUser) { showToast('Login first'); showLoginModal(); return; } document.getElementById('uploadForm').style.display = 'block'; }
+        
+        function uploadHouse() { if (!currentUser) { showToast('Login required'); return; } const newHouse = { id: Date.now(), title: document.getElementById('houseTitle').value, place: document.getElementById('housePlace').value, contact_number: document.getElementById('contactNumber').value, nightly_rate: parseFloat(document.getElementById('nightlyRate').value), photos: uploadedPhotos.length ? uploadedPhotos : ['https://via.placeholder.com/300'], is_verified: false, host_id: currentUser.id, type: document.getElementById('houseType').value }; if (!newHouse.title) { showToast('Enter title'); return; } houses.push(newHouse); localStorage.setItem('bhast_houses', JSON.stringify(houses)); sendEmail(currentUser.email, `Property Submitted: ${newHouse.title}`, `Your property has been submitted for admin approval.`); showToast('✅ House submitted!'); document.getElementById('uploadForm').style.display = 'none'; uploadedPhotos = []; document.getElementById('photoPreview').innerHTML = ''; if(currentUser.role === 'admin') loadPendingHouses(); }
+        
+        function showAdminPanel() { if(currentUser?.role !== 'admin') { showToast('Admin access only. Please log in with admin credentials.'); showLoginModal(); return; } document.getElementById('adminPanel').style.display = 'block'; document.getElementById('uploadForm').style.display = 'none'; document.getElementById('chatMonitor').style.display = 'none'; currentAdminTab = 'pending'; document.querySelectorAll('.admin-tab').forEach((t,i)=>{ t.classList.remove('active'); }); document.querySelector('.admin-tab').classList.add('active'); document.getElementById('pendingSection').style.display = 'block'; document.getElementById('propertiesSection').style.display = 'none'; document.getElementById('usersSection').style.display = 'none'; loadPendingHouses(); }
+        function showUploadForm() { if (!currentUser) { showToast('Login first'); showLoginModal(); return; } document.getElementById('uploadForm').style.display = 'block'; document.getElementById('adminPanel').style.display = 'none'; document.getElementById('chatMonitor').style.display = 'none'; }
+        
         function updateAuthUI() { const auth = document.getElementById('authButtons'), prof = document.getElementById('profileMenu'), admin = document.getElementById('adminBtn'), chatMon = document.getElementById('chatMonitorBtn'); if(currentUser) { auth.style.display='none'; prof.style.display='block'; document.getElementById('profileInitials').textContent = currentUser.name?.charAt(0).toUpperCase()||'G'; document.getElementById('profileName').textContent = currentUser.name; if(currentUser.role === 'admin') { admin.style.display='inline-block'; chatMon.style.display='inline-block'; } else { admin.style.display='none'; chatMon.style.display='none'; } } else { auth.style.display='flex'; prof.style.display='none'; admin.style.display='none'; chatMon.style.display='none'; } updateEmailHistory(); }
-        function login() { const user = users.find(u => (u.username === document.getElementById('loginUsername').value || u.email === document.getElementById('loginUsername').value) && u.password === document.getElementById('loginPassword').value); if(user) { currentUser = {...user}; delete currentUser.password; localStorage.setItem('bhast_currentUser', JSON.stringify(currentUser)); closeLoginModal(); updateAuthUI(); renderProperties(); showToast(`Welcome ${user.name}!`); } else showToast('Invalid credentials'); }
+        
+        function login() { const user = users.find(u => (u.username === document.getElementById('loginUsername').value || u.email === document.getElementById('loginUsername').value) && u.password === document.getElementById('loginPassword').value); if(user) { currentUser = {...user}; delete currentUser.password; localStorage.setItem('bhast_currentUser', JSON.stringify(currentUser)); closeLoginModal(); updateAuthUI(); renderProperties(); showToast(`Welcome ${user.name}! ${user.role === 'admin' ? '👑 Admin full control enabled' : ''}`); } else showToast('Invalid credentials'); }
         function logout() { currentUser = null; localStorage.removeItem('bhast_currentUser'); updateAuthUI(); renderProperties(); showToast('Signed out'); }
         function filterByType(type) { currentFilter.type = type; renderProperties(); }
         function filterByArea(area) { currentFilter.area = area; renderProperties(); }
         function searchProperties() { renderProperties(); }
         function showLoginModal() { document.getElementById('loginModal').style.display = 'flex'; }
         function closeLoginModal() { document.getElementById('loginModal').style.display = 'none'; }
-        function showSignupModal() { showToast('Use demo: demo/password123'); showLoginModal(); }
+        function showSignupModal() { showToast('Use demo: demo/password123 or Admin: bhast_admin/bhast2025'); showLoginModal(); }
         function showMyConversations() { showToast(`You have ${conversations.filter(c=>c.participants.includes(currentUser.id)).length} chats`); }
         function toggleProfileDropdown() { document.getElementById('profileDropdown').classList.toggle('show'); }
         function closeProfileDropdown() { document.getElementById('profileDropdown').classList.remove('show'); }
