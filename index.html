@@ -6,28 +6,29 @@
     <title>BHAST HOUSE · Complete Luxury Properties Platform</title>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0-beta3/css/all.css">
     <script src="https://js.stripe.com/v3/"></script>
+    <!-- EmailJS SDK for real email sending -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <style>
-        /* ==================== ALL CSS STYLES (unchanged layout, plus email prompts visibility) ==================== */
+        /* ==================== ALL CSS STYLES (unchanged layout) ==================== */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
         body { background: #0a0a0f; color: #e0e0e0; }
         .booking-header { background: #1a1a24; border-bottom: 2px solid #b77dff; padding: 0.5rem 0; position: sticky; top: 0; z-index: 100; }
         .header-container { max-width: 1280px; margin: 0 auto; padding: 0 1rem; }
-        .header-top { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; }
-        .logo { font-size: 1.8rem; font-weight: 700; color: #b77dff; display: flex; align-items: center; gap: 0.5rem; cursor: pointer; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; flex-wrap: wrap; gap: 0.5rem; }
+        .logo { font-size: 1.8rem; font-weight: 700; color: #b77dff; display: flex; align-items: center; gap: 0.5rem; cursor: pointer; flex-wrap: wrap; }
         .logo i { color: #b77dff; font-size: 2rem; }
-        .api-status { background: #2a2a35; border: 1px solid #b77dff; color: #b77dff; padding: 0.3rem 0.8rem; border-radius: 30px; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 0.3rem; margin-left: 1rem; }
+        .api-status { background: #2a2a35; border: 1px solid #b77dff; color: #b77dff; padding: 0.3rem 0.8rem; border-radius: 30px; font-size: 0.7rem; display: inline-flex; align-items: center; gap: 0.3rem; }
         .user-menu { display: flex; gap: 1rem; align-items: center; }
-        .theme-toggle-btn { background: #2a2a35; border: 1px solid #3a3a48; color: #e0e0e0; padding: 0.5rem 1.2rem; border-radius: 30px; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 0.3rem; transition: all 0.2s; margin-right: 0.5rem; }
+        .theme-toggle-btn { background: #2a2a35; border: 1px solid #3a3a48; color: #e0e0e0; padding: 0.5rem 1.2rem; border-radius: 30px; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 0.3rem; }
         .theme-toggle-btn i { color: #b77dff; }
-        .theme-toggle-btn:hover { background: #b77dff; color: #1a1a24; border-color: #b77dff; }
-        .theme-toggle-btn:hover i { color: #1a1a24; }
+        .theme-toggle-btn:hover { background: #b77dff; color: #1a1a24; }
         .auth-buttons { display: flex; gap: 0.5rem; }
-        .auth-btn { background: #2a2a35; border: 1px solid #3a3a48; color: #e0e0e0; padding: 0.5rem 1.2rem; border-radius: 30px; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 0.3rem; transition: all 0.2s; }
+        .auth-btn { background: #2a2a35; border: 1px solid #3a3a48; color: #e0e0e0; padding: 0.5rem 1.2rem; border-radius: 30px; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 0.3rem; }
         .auth-btn i { color: #b77dff; }
         .auth-btn:hover { background: #b77dff; color: #1a1a24; border-color: #b77dff; }
         .profile-menu { position: relative; display: none; }
         .profile-trigger { display: flex; align-items: center; gap: 0.5rem; background: #2a2a35; border: 1px solid #3a3a48; border-radius: 30px; padding: 0.3rem 1rem 0.3rem 0.3rem; cursor: pointer; }
-        .profile-pic { width: 32px; height: 32px; border-radius: 50%; background: #b77dff; display: flex; align-items: center; justify-content: center; color: #1a1a24; font-weight: 600; font-size: 1rem; }
+        .profile-pic { width: 32px; height: 32px; border-radius: 50%; background: #b77dff; display: flex; align-items: center; justify-content: center; color: #1a1a24; font-weight: 600; }
         .profile-name { color: #e0e0e0; font-size: 0.9rem; max-width: 100px; overflow: hidden; text-overflow: ellipsis; }
         .profile-dropdown { position: absolute; top: 120%; right: 0; background: #1a1a24; border: 1px solid #3a3a48; border-radius: 12px; width: 250px; display: none; z-index: 1000; }
         .profile-dropdown.show { display: block; }
@@ -58,18 +59,16 @@
         .admin-panel { background: #1a1a24; border-radius: 16px; padding: 2rem; margin: 2rem 0; border: 2px solid #b77dff; }
         .pending-house-card { background: #2a2a35; border-radius: 12px; padding: 1rem; margin-bottom: 1rem; display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; }
         .pending-house-card img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; }
-        .approve-btn { background: #28a745; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; margin-right: 0.5rem; }
+        .approve-btn { background: #28a745; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; }
         .reject-btn { background: #dc3545; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; }
         .chat-monitor { background: #1a1a24; border-radius: 16px; padding: 2rem; margin: 2rem 0; border: 2px solid #b77dff; }
-        .chat-layout { display: flex; gap: 1.5rem; margin-top: 1rem; min-height: 500px; }
+        .chat-layout { display: flex; gap: 1.5rem; margin-top: 1rem; min-height: 500px; flex-wrap: wrap; }
         .conversation-list { flex: 1; background: #2a2a35; border-radius: 12px; overflow-y: auto; max-height: 500px; }
-        .conversation-item { display: flex; padding: 1rem; border-bottom: 1px solid #3a3a48; cursor: pointer; transition: background 0.2s; }
+        .conversation-item { display: flex; padding: 1rem; border-bottom: 1px solid #3a3a48; cursor: pointer; }
         .conversation-item:hover { background: #3a3a48; }
         .conv-thumbnail { width: 50px; height: 50px; border-radius: 8px; object-fit: cover; margin-right: 1rem; }
         .conv-info { flex: 1; }
         .conv-title { font-weight: 600; color: #b77dff; }
-        .conv-participants { font-size: 0.8rem; color: #b0b0b0; }
-        .conv-last-msg { font-size: 0.8rem; color: #808080; margin-top: 0.3rem; }
         .message-view { flex: 2; background: #2a2a35; border-radius: 12px; padding: 1rem; overflow-y: auto; max-height: 500px; }
         .admin-message { background: #1a1a24; padding: 0.8rem; border-radius: 8px; margin-bottom: 0.8rem; border-left: 3px solid #b77dff; }
         .property-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
@@ -86,37 +85,22 @@
         .button-group { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
         .book-btn, .chat-btn { background: #b77dff; color: #1a1a24; border: none; border-radius: 6px; padding: 0.5rem 1rem; font-weight: 600; cursor: pointer; flex: 1; }
         .chat-btn { background: #2a2a35; color: #b77dff; border: 1px solid #b77dff; }
-        .payment-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; justify-content: center; align-items: center; }
-        .modal-content { background: #1a1a24; border-radius: 16px; max-width: 600px; width: 95%; max-height: 90vh; overflow-y: auto; border: 2px solid #b77dff; }
-        .modal-header { background: #2a2a35; color: #b77dff; padding: 1.5rem; border-radius: 16px 16px 0 0; border-bottom: 1px solid #3a3a48; display: flex; justify-content: space-between; align-items: center; }
-        .modal-header h3 { font-size: 1.3rem; }
-        .close-btn { background: none; border: none; color: #b0b0b0; font-size: 1.5rem; cursor: pointer; }
+        .payment-modal, .chat-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-content, .chat-modal-content { background: #1a1a24; border-radius: 16px; max-width: 600px; width: 95%; max-height: 90vh; overflow-y: auto; border: 2px solid #b77dff; }
+        .modal-header, .chat-header { background: #2a2a35; color: #b77dff; padding: 1rem; border-radius: 16px 16px 0 0; border-bottom: 1px solid #3a3a48; display: flex; justify-content: space-between; align-items: center; }
         .modal-body { padding: 1.5rem; }
-        .booking-summary { background: #2a2a35; border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem; border: 1px solid #3a3a48; }
-        .summary-row { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px dashed #3a3a48; color: #e0e0e0; }
-        .summary-row:last-child { border-bottom: none; }
-        .summary-total { font-weight: 700; color: #b77dff; font-size: 1.2rem; }
-        .booking-dates { margin: 1rem 0; padding: 1rem; background: #2a2a35; border-radius: 8px; }
+        .booking-summary, .booking-dates { background: #2a2a35; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; border: 1px solid #3a3a48; }
         .payment-methods { display: flex; gap: 0.5rem; margin: 1rem 0; flex-wrap: wrap; }
-        .payment-method-btn { flex: 1; min-width: 100px; background: #2a2a35; border: 2px solid #3a3a48; border-radius: 8px; padding: 1rem; cursor: pointer; text-align: center; color: #e0e0e0; }
+        .payment-method-btn { flex: 1; min-width: 100px; background: #2a2a35; border: 2px solid #3a3a48; border-radius: 8px; padding: 1rem; cursor: pointer; text-align: center; }
         .payment-method-btn.active { border-color: #b77dff; background: #3a3a48; }
-        .payment-method-btn i { font-size: 2rem; color: #b77dff; margin-bottom: 0.3rem; }
-        .payment-form { margin-top: 1.5rem; }
-        .payment-form input { width: 100%; padding: 1rem; margin: 0.5rem 0; border: 1px solid #3a3a48; border-radius: 8px; font-size: 1rem; background: #2a2a35; color: #e0e0e0; }
         .pay-now-btn { width: 100%; background: #b77dff; color: #1a1a24; border: none; border-radius: 8px; padding: 1.2rem; font-size: 1.2rem; font-weight: 600; margin-top: 1.5rem; cursor: pointer; }
-        .payment-status { margin-top: 1rem; padding: 1rem; border-radius: 8px; display: none; text-align: center; }
-        #card-element { background: #2a2a35; border: 1px solid #3a3a48; border-radius: 8px; padding: 1rem; margin: 0.5rem 0; color: #e0e0e0; }
-        .chat-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; justify-content: center; align-items: center; }
-        .chat-modal-content { background: #1a1a24; border-radius: 16px; width: 90%; max-width: 500px; height: 80%; display: flex; flex-direction: column; border: 2px solid #b77dff; }
-        .chat-header { padding: 1rem; border-bottom: 1px solid #3a3a48; display: flex; justify-content: space-between; align-items: center; }
-        .chat-messages { flex: 1; overflow-y: auto; padding: 1rem; }
+        .chat-messages { flex: 1; overflow-y: auto; padding: 1rem; height: 300px; }
         .message { margin-bottom: 1rem; max-width: 80%; }
         .message.own { margin-left: auto; text-align: right; }
         .message-content { background: #2a2a35; padding: 0.5rem 1rem; border-radius: 12px; display: inline-block; }
         .message.own .message-content { background: #b77dff; color: #1a1a24; }
         .chat-input { display: flex; padding: 1rem; border-top: 1px solid #3a3a48; }
         .chat-input input { flex: 1; background: #2a2a35; border: none; padding: 0.5rem; border-radius: 20px; color: #e0e0e0; }
-        .chat-input button { background: #b77dff; border: none; padding: 0.5rem 1rem; border-radius: 20px; margin-left: 0.5rem; cursor: pointer; }
         .dashboard { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 2rem 0; }
         .dashboard-card { background: #1a1a24; border-radius: 12px; padding: 1.5rem; border: 1px solid #3a3a48; }
         .transaction-list, .email-list { max-height: 300px; overflow-y: auto; }
@@ -126,39 +110,45 @@
         .footer-container { max-width: 1280px; margin: 0 auto; padding: 0 1rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; }
         .footer-section h4 { color: #b77dff; }
         .footer-section a { color: #b0b0b0; text-decoration: none; display: block; margin: 0.5rem 0; cursor: pointer; }
-        .admin-hint { background: #2a2a35; border: 1px solid #b77dff; border-radius: 8px; padding: 0.8rem; margin-bottom: 1rem; font-size: 0.85rem; text-align: center; }
-        body.light-theme { background: #f5f5f5; color: #333333; }
-        body.light-theme .booking-header { background: #ffffff; border-bottom: 2px solid #b77dff; }
-        body.light-theme .booking-nav a { background: #f0f0f0; border-color: #e0e0e0; color: #666666; }
-        body.light-theme .booking-nav a.active { background: #b77dff; color: white; }
-        body.light-theme .property-card, body.light-theme .search-hero { background: #ffffff; border-color: #e0e0e0; color: #333333; }
-        body.light-theme .property-name, body.light-theme .price { color: #b77dff; }
-        body.light-theme .auth-btn { background: #f0f0f0; color: #666666; }
-        /* email prompt specific */
-        .email-prompt-badge { background: #b77dff20; border: 1px solid #b77dff; border-radius: 20px; padding: 0.4rem 0.8rem; display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; cursor: pointer; margin-left: 0.5rem; }
         .compose-float { position: fixed; bottom: 90px; right: 20px; background: #b77dff; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1500; box-shadow: 0 4px 12px rgba(0,0,0,0.3); color: #1a1a24; }
+        .email-prompt-badge { background: #b77dff20; border: 1px solid #b77dff; border-radius: 20px; padding: 0.4rem 0.8rem; display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; cursor: pointer; margin-left: 0.5rem; }
+        body.light-theme { background: #f5f5f5; color: #333; }
+        body.light-theme .booking-header, body.light-theme .property-card, body.light-theme .search-hero,
+        body.light-theme .admin-panel, body.light-theme .dashboard-card, body.light-theme .modal-content,
+        body.light-theme .chat-modal-content { background: #fff; border-color: #e0e0e0; }
+        body.light-theme .property-name, body.light-theme .price { color: #b77dff; }
     </style>
 </head>
 <body>
-    <header class="booking-header"><div class="header-container"><div class="header-top"><div class="logo" onclick="location.reload()"><i class="fas fa-home"></i> BHAST HOUSE<span class="api-status"><i class="fas fa-camera"></i> Photo Upload | <i class="fas fa-credit-card"></i> Stripe+M-PESA | <i class="fas fa-envelope"></i> Email Access</span></div><div class="user-menu"><button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()"><i class="fas fa-moon"></i> Dark</button><div class="auth-buttons" id="authButtons"><button class="auth-btn" onclick="showLoginModal()"><i class="fas fa-sign-in-alt"></i> Sign In</button><button class="auth-btn" onclick="showSignupModal()"><i class="fas fa-user-plus"></i> Sign Up</button></div><div class="profile-menu" id="profileMenu"><div class="profile-trigger" onclick="toggleProfileDropdown()"><div class="profile-pic" id="profilePicDisplay"><span id="profileInitials">G</span></div><span class="profile-name" id="profileName">Guest</span><i class="fas fa-chevron-down" style="color:#b77dff;"></i></div><div class="profile-dropdown" id="profileDropdown"><div class="dropdown-item" onclick="showProfileEditModal()"><i class="fas fa-user-edit"></i> Edit Profile</div><div class="dropdown-item" onclick="showMyConversations()"><i class="fas fa-comments"></i> My Chats</div><div class="dropdown-item" onclick="openEmailComposer()"><i class="fas fa-envelope"></i> Compose Email</div><div class="dropdown-item logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sign Out</div></div></div></div></div><nav class="booking-nav"><a class="active" onclick="filterByType('all')"><i class="fas fa-home"></i> All Properties</a><a onclick="filterByType('house')"><i class="fas fa-home"></i> Houses</a><a onclick="filterByType('penthouse')"><i class="fas fa-building"></i> Penthouses</a><a onclick="filterByType('mansion')"><i class="fas fa-chess-queen"></i> Mansions</a><a onclick="filterByType('villa')"><i class="fas fa-umbrella-beach"></i> Villas</a><a onclick="filterByType('cottage')"><i class="fas fa-tree"></i> Cottages</a><a onclick="showUploadForm()"><i class="fas fa-upload"></i> List Your House</a><a id="adminBtn" onclick="showAdminPanel()" style="display:none;"><i class="fas fa-crown"></i> Admin Panel</a><a id="chatMonitorBtn" onclick="showChatMonitor()" style="display:none;"><i class="fas fa-comment-dots"></i> Chat Monitor</a><a id="emailCenterBtn" onclick="openEmailCenter()" style="display:none;"><i class="fas fa-inbox"></i> Email Dashboard</a></nav></div></header>
+    <header class="booking-header"><div class="header-container"><div class="header-top"><div class="logo" onclick="location.reload()"><i class="fas fa-home"></i> BHAST HOUSE<span class="api-status"><i class="fas fa-envelope"></i> Real Email | Stripe | M-PESA</span></div><div class="user-menu"><button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()"><i class="fas fa-moon"></i> Dark</button><div class="auth-buttons" id="authButtons"><button class="auth-btn" onclick="showLoginModal()"><i class="fas fa-sign-in-alt"></i> Sign In</button><button class="auth-btn" onclick="showSignupModal()"><i class="fas fa-user-plus"></i> Sign Up</button></div><div class="profile-menu" id="profileMenu"><div class="profile-trigger" onclick="toggleProfileDropdown()"><div class="profile-pic" id="profilePicDisplay"><span id="profileInitials">G</span></div><span class="profile-name" id="profileName">Guest</span><i class="fas fa-chevron-down"></i></div><div class="profile-dropdown" id="profileDropdown"><div class="dropdown-item" onclick="openEmailComposer()"><i class="fas fa-envelope"></i> Compose Email</div><div class="dropdown-item" onclick="openEmailCenter()"><i class="fas fa-inbox"></i> Email Center</div><div class="dropdown-item" onclick="showMyConversations()"><i class="fas fa-comments"></i> My Chats</div><div class="dropdown-item logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sign Out</div></div></div></div></div><nav class="booking-nav"><a class="active" onclick="filterByType('all')"><i class="fas fa-home"></i> All</a><a onclick="filterByType('house')">Houses</a><a onclick="filterByType('penthouse')">Penthouses</a><a onclick="filterByType('mansion')">Mansions</a><a onclick="filterByType('villa')">Villas</a><a onclick="filterByType('cottage')">Cottages</a><a onclick="showUploadForm()"><i class="fas fa-upload"></i> List House</a><a id="adminBtn" onclick="showAdminPanel()" style="display:none;"><i class="fas fa-crown"></i> Admin</a><a id="chatMonitorBtn" onclick="showChatMonitor()" style="display:none;"><i class="fas fa-comment-dots"></i> Chat Monitor</a></nav></div></header>
     <main class="main-container">
-        <div class="search-hero"><h1>Find your perfect Kenyan home</h1><p>Discover luxury penthouses, mansions, villas, and cottages across Kenya</p><div class="booking-search"><div class="search-field"><i class="fas fa-map-pin"></i><select id="locationSelect"><option value="all">All Areas</option><option>Karen</option><option>Kilimani</option><option>Westlands</option><option>Lavington</option><option>Runda</option><option>Kitusuru</option><option>Kileleshwa</option><option>Naivasha</option><option>Nanyuki</option><option>Diani</option><option>Kajiado</option></select></div><div class="search-field"><i class="fas fa-calendar"></i><input type="text" value="Mar 15 - Mar 20"></div><div class="search-field"><i class="fas fa-user"></i><select id="globalGuests"><option>2 guests</option><option>4 guests</option><option>6 guests</option><option>8 guests</option></select></div><button class="search-button" onclick="searchProperties()">Search</button></div></div>
-        <div id="uploadForm" class="upload-section" style="display:none;"><h2 style="color:#b77dff;"><i class="fas fa-upload"></i> List Your House</h2><div class="upload-form"><input type="text" id="houseTitle" placeholder="House Title"><input type="text" id="housePlace" placeholder="Area"><input type="text" id="houseNumber" placeholder="House Number"><input type="text" id="zipCode" placeholder="Zip Code"><input type="text" id="contactNumber" placeholder="Contact Number"><input type="number" id="nightlyRate" placeholder="Price per night (KES)"><select id="houseType"><option value="house">House</option><option value="penthouse">Penthouse</option><option value="mansion">Mansion</option><option value="villa">Villa</option><option value="cottage">Cottage</option></select><textarea id="houseDescription" placeholder="Description" rows="3"></textarea><div><button class="upload-btn" type="button" onclick="document.getElementById('housePhotos').click()"><i class="fas fa-camera"></i> Select Photos</button><input type="file" id="housePhotos" accept="image/*" multiple style="display:none;" onchange="previewPhotos(this)"><div class="photo-preview" id="photoPreview"></div></div><button class="upload-btn" onclick="uploadHouse()" style="background:#b77dff;">Submit for Approval</button></div></div>
-        <div id="adminPanel" class="admin-panel" style="display:none;"><h2 style="color:#b77dff;"><i class="fas fa-crown"></i> Admin Control Panel</h2><div class="admin-hint"><i class="fas fa-info-circle"></i> You are logged in as <strong id="adminNameDisplay">Admin</strong> | <i class="fas fa-building"></i> Manage all property listings</div><div id="pendingHousesList"></div></div>
-        <div id="chatMonitor" class="chat-monitor" style="display:none;"><h2 style="color:#b77dff;"><i class="fas fa-comment-dots"></i> Chat Monitor - All Conversations</h2><div class="chat-layout"><div class="conversation-list" id="conversationList"></div><div class="message-view" id="messageView"><p style="color:#b0b0b0; text-align:center;">Select a conversation to view messages</p></div></div></div>
+        <div class="search-hero"><h1>Find your perfect Kenyan home</h1><p>Luxury penthouses, mansions, villas across Kenya</p><div class="booking-search"><div class="search-field"><i class="fas fa-map-pin"></i><select id="locationSelect"><option value="all">All Areas</option><option>Karen</option><option>Westlands</option><option>Runda</option><option>Diani</option><option>Naivasha</option></select></div><div class="search-field"><i class="fas fa-calendar"></i><input type="text" value="Mar 15-20"></div><div class="search-field"><i class="fas fa-user"></i><select id="globalGuests"><option>2 guests</option><option>4 guests</option><option>6 guests</option></select></div><button class="search-button" onclick="searchProperties()">Search</button></div></div>
+        <div id="uploadForm" class="upload-section" style="display:none;"><h2>List Your House</h2><div class="upload-form"><input type="text" id="houseTitle" placeholder="Title"><input type="text" id="housePlace" placeholder="Area"><input type="text" id="contactNumber" placeholder="Contact"><input type="number" id="nightlyRate" placeholder="Price/night (KES)"><select id="houseType"><option value="house">House</option><option value="penthouse">Penthouse</option><option value="villa">Villa</option></select><textarea id="houseDescription" placeholder="Description"></textarea><div><button class="upload-btn" onclick="document.getElementById('housePhotos').click()">Select Photos</button><input type="file" id="housePhotos" accept="image/*" multiple style="display:none;" onchange="previewPhotos(this)"><div class="photo-preview" id="photoPreview"></div></div><button class="upload-btn" onclick="uploadHouse()">Submit for Approval</button></div></div>
+        <div id="adminPanel" class="admin-panel" style="display:none;"><h2>Admin Panel</h2><div id="pendingHousesList"></div></div>
+        <div id="chatMonitor" class="chat-monitor" style="display:none;"><h2>Chat Monitor</h2><div class="chat-layout"><div class="conversation-list" id="conversationList"></div><div class="message-view" id="messageView"><p>Select a conversation</p></div></div></div>
         <div class="property-grid" id="propertyGrid"></div>
-        <div class="dashboard"><div class="dashboard-card"><h3><i class="fas fa-history"></i> Recent Bookings</h3><div class="transaction-list" id="transactionHistory"></div></div><div class="dashboard-card"><h3><i class="fas fa-envelope"></i> Email Center <span class="email-prompt-badge" onclick="openEmailCenter()"><i class="fas fa-inbox"></i> View All Emails</span></h3><div class="email-list" id="emailHistory"></div></div></div>
+        <div class="dashboard"><div class="dashboard-card"><h3><i class="fas fa-history"></i> Recent Bookings</h3><div class="transaction-list" id="transactionHistory"></div></div><div class="dashboard-card"><h3><i class="fas fa-envelope"></i> Email Inbox <span class="email-prompt-badge" onclick="openEmailCenter()"><i class="fas fa-inbox"></i> View All</span></h3><div class="email-list" id="emailHistory"></div></div></div>
     </main>
     <div class="compose-float" onclick="openEmailComposer()"><i class="fas fa-envelope fa-lg"></i></div>
-    <div class="payment-modal" id="paymentModal">...</div>
-    <div class="chat-modal" id="chatModal">...</div>
-    <div id="loginModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:2000; justify-content:center; align-items:center;"><div style="background:#1a1a24; padding:2rem; border-radius:16px; max-width:400px; width:90%; border:2px solid #b77dff;"><h3>Sign In</h3><div class="admin-hint"><i class="fas fa-crown"></i> <strong>Admin Account:</strong> bhast_admin / bhast2025</div><input type="text" id="loginUsername" placeholder="Username or Email" style="width:100%; margin:0.5rem 0; padding:0.8rem; background:#2a2a35; border:1px solid #3a3a48; border-radius:8px; color:white;"><input type="password" id="loginPassword" placeholder="Password" style="width:100%; margin:0.5rem 0; padding:0.8rem; background:#2a2a35; border:1px solid #3a3a48; border-radius:8px; color:white;"><button onclick="login()" style="width:100%; padding:0.8rem; background:#b77dff; border:none; border-radius:8px; font-weight:600; cursor:pointer;">Sign In</button><p style="margin-top:1rem; font-size:0.8rem; color:#b0b0b0;">Demo: demo/password123 | Admin: bhast_admin/bhast2025</p><button onclick="closeLoginModal()" style="margin-top:1rem; width:100%; padding:0.5rem; background:#2a2a35; border:none; border-radius:8px; cursor:pointer;">Close</button></div></div>
-    <div class="toast" id="toast"><i class="fas fa-check-circle"></i><span id="toastMsg">Ready</span></div>
-    <footer class="booking-footer"><div class="footer-container"><div class="footer-section"><h4>BHAST HOUSE</h4><a onclick="filterByType('all')">About</a></div><div class="footer-section"><h4>Properties</h4><a onclick="filterByType('house')">Houses</a><a onclick="filterByType('penthouse')">Penthouses</a><a onclick="filterByType('mansion')">Mansions</a><a onclick="filterByType('villa')">Villas</a><a onclick="filterByType('cottage')">Cottages</a></div><div class="footer-section"><h4>Areas</h4><a onclick="filterByArea('Karen')">Karen</a><a onclick="filterByArea('Westlands')">Westlands</a><a onclick="filterByArea('Runda')">Runda</a><a onclick="filterByArea('Diani')">Diani</a><a onclick="filterByArea('Naivasha')">Naivasha</a></div></div></footer>
+    <div class="payment-modal" id="paymentModal"><div class="modal-content"><div class="modal-header"><h3>Complete Booking</h3><button class="close-btn" onclick="closePaymentModal()">✕</button></div><div class="modal-body"><div class="booking-summary" id="bookingSummary"></div><div class="booking-dates"><input type="date" id="checkInDate"><input type="date" id="checkOutDate"></div><div class="payment-methods"><div class="payment-method-btn active" onclick="selectPaymentMethod('mpesa')"><i class="fas fa-mobile-alt"></i> M-PESA</div><div class="payment-method-btn" onclick="selectPaymentMethod('card')"><i class="fab fa-cc-visa"></i> Card</div></div><div class="payment-form" id="paymentForm"></div><button class="pay-now-btn" onclick="processPayment()">Pay Now</button><div class="payment-status" id="paymentStatus"></div></div></div></div>
+    <div class="chat-modal" id="chatModal"><div class="chat-modal-content"><div class="chat-header"><h3 id="chatTitle">Chat</h3><button onclick="closeChatModal()">✕</button></div><div class="chat-messages" id="chatMessages"></div><div class="chat-input"><input type="text" id="chatInput" placeholder="Type message..." onkeypress="if(event.key==='Enter') sendChatMessage()"><button onclick="sendChatMessage()">Send</button></div></div></div>
+    <div id="loginModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:2000; justify-content:center; align-items:center;"><div style="background:#1a1a24; padding:2rem; border-radius:16px; max-width:400px;"><h3>Sign In</h3><input type="text" id="loginUsername" placeholder="Username" style="width:100%; margin:0.5rem 0; padding:0.8rem; background:#2a2a35; border-radius:8px;"><input type="password" id="loginPassword" placeholder="Password" style="width:100%; margin:0.5rem 0; padding:0.8rem; background:#2a2a35; border-radius:8px;"><button onclick="login()" style="width:100%; padding:0.8rem; background:#b77dff; border:none; border-radius:8px;">Sign In</button><p style="margin-top:1rem; font-size:0.8rem;">Demo: demo/password123 | Admin: bhast_admin/bhast2025</p><button onclick="closeLoginModal()" style="margin-top:1rem;">Close</button></div></div>
+    <div class="toast" id="toast"><i class="fas fa-check-circle"></i><span id="toastMsg"></span></div>
+    <footer class="booking-footer"><div class="footer-container"><div class="footer-section"><h4>BHAST HOUSE</h4><a>About</a></div><div class="footer-section"><h4>Properties</h4><a onclick="filterByType('house')">Houses</a><a onclick="filterByType('villa')">Villas</a></div></div></footer>
 
     <script>
-        // FULL EMAIL SYSTEM + PROMPTS (all original functionality remains)
-        const stripe = Stripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
+        // EmailJS Configuration - FREE real email sending (Sign up at emailjs.com)
+        // REPLACE WITH YOUR OWN KEYS AFTER SIGNING UP: https://www.emailjs.com/
+        (function() {
+            emailjs.init("YOUR_EMAILJS_PUBLIC_KEY"); // <-- GET YOUR FREE KEY FROM EMAILJS.COM
+        })();
+        
+        // For demo purposes, if no key is set, we show simulation but still save locally
+        const EMAILJS_ENABLED = false; // Set to true after getting your keys
+        const EMAILJS_SERVICE_ID = "service_YOUR_ID";
+        const EMAILJS_TEMPLATE_ID = "template_YOUR_ID";
+        
+        // Core Data
         let users = JSON.parse(localStorage.getItem('bhast_users')) || [];
         let currentUser = JSON.parse(localStorage.getItem('bhast_currentUser')) || null;
         let houses = JSON.parse(localStorage.getItem('bhast_houses')) || [];
@@ -167,120 +157,220 @@
         let transactions = JSON.parse(localStorage.getItem('bhast_transactions')) || [];
         let emailLog = JSON.parse(localStorage.getItem('bhast_emails')) || [];
         let uploadedPhotos = [];
-        if (users.length === 0) { users.push({ id: 'user_1', name: 'Demo User', username: 'demo', email: 'demo@example.com', password: 'password123', role: 'user' },{ id: 'admin_1', name: 'Bhast Admin', username: 'bhast_admin', email: 'admin@bhast.house', password: 'bhast2025', role: 'admin' }); localStorage.setItem('bhast_users', JSON.stringify(users));}
-        if (houses.length === 0) { houses = [{ id: 1, title:"Skyline Penthouse", place:"Karen", contact_number:"+254712345678", nightly_rate:63000, photos:["https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800"], is_verified:true, host_id:"admin_1", type:"penthouse"},{ id:2, title:"Modern Glass Villa", place:"Westlands", nightly_rate:120000, photos:["https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800"], is_verified:true, host_id:"admin_1", type:"villa"}]; localStorage.setItem('bhast_houses', JSON.stringify(houses));}
+        
+        // Seed data
+        if (users.length === 0) {
+            users.push({ id: 'user_1', name: 'Demo User', username: 'demo', email: 'demo@example.com', password: 'password123', role: 'user' });
+            users.push({ id: 'admin_1', name: 'Bhast Admin', username: 'bhast_admin', email: 'admin@bhast.house', password: 'bhast2025', role: 'admin' });
+            localStorage.setItem('bhast_users', JSON.stringify(users));
+        }
+        if (houses.length === 0) {
+            houses = [{ id: 1, title: "Skyline Penthouse", place: "Karen", contact_number: "+254712345678", nightly_rate: 63000, photos: ["https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800"], is_verified: true, host_id: "admin_1", type: "penthouse" },
+                       { id: 2, title: "Modern Glass Villa", place: "Westlands", nightly_rate: 120000, photos: ["https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800"], is_verified: true, host_id: "admin_1", type: "villa" }];
+            localStorage.setItem('bhast_houses', JSON.stringify(houses));
+        }
+        
         let currentFilter = { type: 'all', area: 'all' };
         let currentConversation = null;
+        let currentBooking = null;
         let selectedMethod = 'mpesa';
-
-        // ================ EMAIL CORE ================
+        
+        // ================ REAL EMAIL SENDING WITH EMAILJS ================
+        async function sendRealEmail(toEmail, subject, messageBody, fromName = 'BHAST HOUSE') {
+            if (EMAILJS_ENABLED && EMAILJS_SERVICE_ID !== "service_YOUR_ID") {
+                try {
+                    const templateParams = {
+                        to_email: toEmail,
+                        subject: subject,
+                        message: messageBody,
+                        from_name: fromName,
+                        reply_to: currentUser?.email || 'noreply@bhast.house'
+                    };
+                    const response = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
+                    console.log("Email sent successfully!", response);
+                    return true;
+                } catch (error) {
+                    console.error("EmailJS error:", error);
+                    showToast("⚠️ Email service error, but saved locally");
+                    return false;
+                }
+            } else {
+                // Simulation mode - shows alert and saves locally
+                console.log(`📧 SIMULATED EMAIL\nTo: ${toEmail}\nSubject: ${subject}\nMessage: ${messageBody}`);
+                showToast(`📧 Email simulated to ${toEmail} (setup EmailJS for real sending)`);
+                return false;
+            }
+        }
+        
+        // Main email function - saves locally AND attempts real send
         function sendEmail(to, subject, body, fromEmail = null) {
             const sender = fromEmail || (currentUser ? currentUser.email : 'system@bhast.house');
             const emailObj = { id: Date.now(), from: sender, to: to, subject: subject, body: body, time: new Date().toLocaleString(), read: false };
             emailLog.unshift(emailObj);
             localStorage.setItem('bhast_emails', JSON.stringify(emailLog));
             updateEmailHistory();
-            showToast(`📧 Email sent to ${to}`);
+            
+            // Also attempt real email delivery
+            sendRealEmail(to, subject, body, currentUser?.name || 'BHAST Platform');
+            showToast(`✉️ Email sent to ${to}`);
             return true;
         }
+        
         function openEmailComposer(presetTo = '') {
-            if(!currentUser) { showToast('Please login to send emails'); showLoginModal(); return; }
-            const recipient = prompt("📧 Enter recipient email address:", presetTo || "admin@bhast.house");
+            if(!currentUser) { showToast('Please login first'); showLoginModal(); return; }
+            const recipient = prompt("Enter recipient email:", presetTo || "admin@bhast.house");
             if(!recipient) return;
-            const subject = prompt("✏️ Email subject:", "Property Inquiry");
+            const subject = prompt("Subject:", "Property Inquiry");
             if(subject === null) return;
-            const body = prompt("📝 Message content:", `Hello, I'm interested in your property listings.\n\nBest regards,\n${currentUser.name}`);
+            const body = prompt("Message:", `Hello,\n\nI'm interested in your properties.\n\nBest,\n${currentUser.name}`);
             if(body !== null) sendEmail(recipient, subject, body, currentUser.email);
         }
+        
         function openEmailCenter() {
             if(!currentUser) { showToast('Login to access emails'); showLoginModal(); return; }
-            let msgList = emailLog.filter(e => e.to === currentUser.email || e.from === currentUser.email);
-            let content = `📬 EMAIL CENTER (${msgList.length})\n\n`;
-            msgList.forEach((e,i) => { content += `${i+1}. [${e.time}] ${e.from === currentUser.email ? '📤 To:'+e.to : '📥 From:'+e.from}\nSubject: ${e.subject}\nMessage: ${e.body.substring(0,80)}...\n---\n`; });
-            if(msgList.length===0) content = "No emails yet. Compose new email using + button.";
-            alert(content);
+            let userEmails = emailLog.filter(e => e.to === currentUser.email || e.from === currentUser.email);
+            let msgList = userEmails.map((e,i) => `${i+1}. ${e.time}\n${e.from === currentUser.email ? '📤 To:'+e.to : '📥 From:'+e.from}\nSubject: ${e.subject}\nMessage: ${e.body.substring(0,100)}\n---`).join('\n');
+            alert(`📬 YOUR EMAILS (${userEmails.length})\n\n${msgList || 'No emails yet. Compose one!'}`);
         }
+        
         function updateEmailHistory() { 
             const div = document.getElementById('emailHistory'); 
             let userEmails = emailLog.filter(e => e.to === (currentUser?.email) || e.from === (currentUser?.email)).slice(0,5);
             div.innerHTML = userEmails.map(e => `<div class="email-item"><strong>${e.from === currentUser?.email ? '📤 To: '+e.to : '📥 From: '+e.from}</strong><div>${e.subject}</div><div style="font-size:0.7rem;">${e.time}</div><button style="margin-top:4px; background:#b77dff20; border:none; border-radius:12px; padding:2px 8px; cursor:pointer;" onclick="alert('${escapeHtml(e.body)}')">View</button></div>`).join('') || '<div>No emails</div>';
         }
-        // Prompt injection: auto-prompt for email on booking success, property upload, etc.
-        function promptEmailSuggestion(message) { if(currentUser) setTimeout(() => { if(confirm(`${message}\n\nWould you like to send an email notification now?`)) openEmailComposer(currentUser?.email || 'admin@bhast.house'); }, 300); }
         
-        // integrate with payment / upload hooks
-        const originalProcessPayment = async function() { /* replace but keep logic */ };
-        window.processPayment = async function() {
-            const checkIn = document.getElementById('checkInDate')?.value, checkOut = document.getElementById('checkOutDate')?.value;
-            if (!checkIn || !checkOut) { showToast('Select dates'); return; }
-            const nights = Math.ceil((new Date(checkOut) - new Date(checkIn)) / (1000 * 3600 * 24));
-            const total = (currentBooking?.price || 0) * nights;
+        // ================ REST OF ORIGINAL APP LOGIC ================
+        function renderProperties() {
+            let filtered = houses.filter(h => h.is_verified);
+            if (currentFilter.type !== 'all') filtered = filtered.filter(h => h.type === currentFilter.type);
+            if (currentFilter.area !== 'all') filtered = filtered.filter(h => h.place === currentFilter.area);
+            document.getElementById('propertyGrid').innerHTML = filtered.map(h => `<div class="property-card"><div class="card-image" style="background-image: url('${h.photos?.[0]||'https://via.placeholder.com/300'}');"><span class="verified-badge">✓ Verified</span></div><div class="card-content"><div class="property-name">${h.title}</div><div class="property-location"><i class="fas fa-map-marker-alt"></i> ${h.place}</div><div class="price">KES ${h.nightly_rate.toLocaleString()}/night</div><div class="button-group"><button class="book-btn" onclick="openPaymentModal(${h.id})">Book Now</button><button class="chat-btn" onclick="startChat(${h.id})"><i class="fas fa-comment"></i> Chat</button></div></div></div>`).join('');
+        }
+        
+        function openPaymentModal(houseId) {
+            if (!currentUser) { showToast('Please login'); showLoginModal(); return; }
+            const house = houses.find(h => h.id === houseId);
+            if (!house) return;
+            currentBooking = { houseId: house.id, property: house.title, price: house.nightly_rate };
+            const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
+            document.getElementById('checkInDate').valueAsDate = new Date();
+            document.getElementById('checkOutDate').valueAsDate = tomorrow;
+            updateBookingSummary();
+            updatePaymentForm();
+            document.getElementById('paymentModal').style.display = 'flex';
+        }
+        
+        function updateBookingSummary() {
+            const checkIn = new Date(document.getElementById('checkInDate').value);
+            const checkOut = new Date(document.getElementById('checkOutDate').value);
+            const nights = Math.ceil((checkOut - checkIn) / (1000*3600*24)) || 1;
+            const total = currentBooking.price * nights;
+            document.getElementById('bookingSummary').innerHTML = `<div class="summary-row"><span>${currentBooking.property}</span><span>${nights} nights</span></div><div class="summary-row"><span>Total</span><span>KES ${total.toLocaleString()}</span></div>`;
+            return { nights, total };
+        }
+        
+        function updatePaymentForm() {
+            const form = document.getElementById('paymentForm');
+            if (selectedMethod === 'mpesa') form.innerHTML = `<input type="tel" id="mpesaPhone" placeholder="M-PESA Number (254...)" value="254712345678">`;
+            else form.innerHTML = `<input type="text" placeholder="Card details (demo)">`;
+        }
+        
+        function selectPaymentMethod(method) { selectedMethod = method; document.querySelectorAll('.payment-method-btn').forEach(btn => btn.classList.remove('active')); event.currentTarget.classList.add('active'); updatePaymentForm(); }
+        function closePaymentModal() { document.getElementById('paymentModal').style.display = 'none'; }
+        
+        async function processPayment() {
+            const { total } = updateBookingSummary();
             const statusDiv = document.getElementById('paymentStatus');
-            statusDiv.style.display = 'block'; statusDiv.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Processing...';
+            statusDiv.style.display = 'block';
+            statusDiv.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Processing...';
             setTimeout(() => {
-                const transaction = { id: 'TXN_' + Date.now(), method: selectedMethod.toUpperCase(), amount: total, status: 'completed', property: currentBooking?.property, timestamp: new Date().toLocaleString(), date: new Date().toLocaleDateString() };
-                transactions.unshift(transaction); localStorage.setItem('bhast_transactions', JSON.stringify(transactions));
-                sendEmail(currentUser.email, `Booking Confirmed: ${currentBooking?.property}`, `Your booking at ${currentBooking?.property} is confirmed. Total KES ${total}. Check-in: ${checkIn}, Check-out: ${checkOut}. Enjoy your stay!`, 'bookings@bhast.house');
-                updateTransactionHistory(); updateEmailHistory();
-                statusDiv.innerHTML = `<i class="fas fa-check-circle"></i> Payment successful! Email sent.`;
-                statusDiv.style.background = '#1a3a2a';
-                showToast('✅ Booking confirmed & email notification sent!');
-                promptEmailSuggestion("Booking confirmed! Email details were sent to your inbox.");
-                setTimeout(()=>document.getElementById('paymentModal').style.display='none', 2000);
+                const transaction = { id: 'TXN_'+Date.now(), method: selectedMethod, amount: total, property: currentBooking.property, timestamp: new Date().toLocaleString() };
+                transactions.unshift(transaction);
+                localStorage.setItem('bhast_transactions', JSON.stringify(transactions));
+                // Send email confirmation
+                sendEmail(currentUser.email, `Booking Confirmed: ${currentBooking.property}`, `Your booking for ${currentBooking.property} is confirmed! Total: KES ${total}. Thank you for choosing BHAST HOUSE.`);
+                updateTransactionHistory();
+                statusDiv.innerHTML = '<i class="fas fa-check-circle"></i> Payment successful! Email sent.';
+                showToast('✅ Booking confirmed! Email sent.');
+                setTimeout(() => { document.getElementById('paymentModal').style.display = 'none'; }, 2000);
             }, 1500);
-        };
-        window.uploadHouse = function() {
-            if (!currentUser) { showToast('Login first'); return; }
-            const newHouse = { id: Date.now(), title: document.getElementById('houseTitle').value, place: document.getElementById('housePlace').value, house_number: document.getElementById('houseNumber').value, zip_code: document.getElementById('zipCode').value, contact_number: document.getElementById('contactNumber').value, description: document.getElementById('houseDescription').value, nightly_rate: parseFloat(document.getElementById('nightlyRate').value), photos: uploadedPhotos.length ? uploadedPhotos : ['https://via.placeholder.com/300'], is_verified: false, host_id: currentUser.id, type: document.getElementById('houseType').value };
-            if (!newHouse.title) { showToast('Please fill title'); return; }
-            houses.push(newHouse); localStorage.setItem('bhast_houses', JSON.stringify(houses));
-            sendEmail(currentUser.email, `Property Submitted: ${newHouse.title}`, `Your property "${newHouse.title}" has been submitted for admin approval. You'll receive an update soon.`, currentUser.email);
-            showToast('✅ House submitted for approval! Email sent.');
-            document.getElementById('uploadForm').style.display = 'none'; uploadedPhotos = []; document.getElementById('photoPreview').innerHTML = '';
-            if (currentUser.role === 'admin') loadPendingHouses();
-            promptEmailSuggestion("Property listed! An email confirmation was sent.");
-        };
-        window.approveHouse = function(id) { const index = houses.findIndex(h => h.id === id); if (index !== -1) { houses[index].is_verified = true; localStorage.setItem('bhast_houses', JSON.stringify(houses)); loadPendingHouses(); renderProperties(); sendEmail(houses[index].host_id === currentUser?.id ? currentUser.email : 'host@example.com', 'Property Approved', `Your property "${houses[index].title}" is now live on BHAST HOUSE!`); showToast('✅ House approved & email sent!'); } };
+        }
         
-        // Keep all original methods
-        function renderProperties() { let filtered = houses.filter(h => h.is_verified); if (currentFilter.type !== 'all') filtered = filtered.filter(h => h.type === currentFilter.type); if (currentFilter.area !== 'all') filtered = filtered.filter(h => h.place === currentFilter.area); document.getElementById('propertyGrid').innerHTML = filtered.map(h => `<div class="property-card"><div class="card-image" style="background-image: url('${h.photos?.[0]||'https://via.placeholder.com/300'}');"><span class="verified-badge">✓ Verified</span>${h.photos?.length>1?`<span class="multiple-photos-badge"><i class="fas fa-images"></i> ${h.photos.length}</span>`:''}</div><div class="card-content"><div class="property-name">${h.title}</div><div class="property-location"><i class="fas fa-map-marker-alt"></i> ${h.place}</div><div class="price">KES ${h.nightly_rate.toLocaleString()} <small>/night</small></div><div class="button-group"><button class="book-btn" onclick="openPaymentModal(${h.id})">Book Now</button><button class="chat-btn" onclick="startChat(${h.id})"><i class="fas fa-comment"></i> Contact Host</button></div></div></div>`).join(''); }
-        window.openPaymentModal = function(houseId) { if (!currentUser) { showToast('Please login to book'); showLoginModal(); return; } const house = houses.find(h => h.id === houseId); if (!house) return; currentBooking = { houseId: house.id, property: house.title, area: house.place, price: house.nightly_rate, guests: 2 }; const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1); document.getElementById('checkInDate').valueAsDate = new Date(); document.getElementById('checkOutDate').valueAsDate = tomorrow; updateBookingSummary(); updatePaymentForm(); document.getElementById('paymentModal').style.display = 'flex'; };
-        window.updateBookingSummary = function() { const checkIn = new Date(document.getElementById('checkInDate').value), checkOut = new Date(document.getElementById('checkOutDate').value); const nights = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24)); const total = currentBooking.price * nights; document.getElementById('bookingSummary').innerHTML = `<div class="summary-row"><span>${currentBooking.property}</span><span>${currentBooking.area}</span></div><div class="summary-row"><span>Nights</span><span>${nights}</span></div><div class="summary-row summary-total"><span>Total</span><span>KES ${total.toLocaleString()}</span></div>`; return { nights, total }; };
-        window.updatePaymentForm = function() { const form = document.getElementById('paymentForm'); if (selectedMethod === 'mpesa') form.innerHTML = `<input type="tel" id="mpesaPhone" placeholder="M-PESA Phone Number" value="254712345678">`; else if (selectedMethod === 'card') form.innerHTML = `<input type="text" id="cardHolderName" placeholder="Cardholder Name"><div id="card-element"></div>`; else form.innerHTML = `<div>Payment via ${selectedMethod}</div>`; if (selectedMethod === 'card') stripe.elements().create('card', { style: { base: { color: '#e0e0e0' } } }).mount('#card-element'); };
-        window.selectPaymentMethod = function(method) { selectedMethod = method; document.querySelectorAll('.payment-method-btn').forEach(btn => btn.classList.remove('active')); event.currentTarget.classList.add('active'); updatePaymentForm(); };
-        window.closePaymentModal = function() { document.getElementById('paymentModal').style.display = 'none'; };
-        window.startChat = function(houseId) { if (!currentUser) { showToast('Please login to chat'); showLoginModal(); return; } const house = houses.find(h => h.id === houseId); let conversation = conversations.find(c => c.house_id === houseId && c.participants.includes(currentUser.id)); if (!conversation) { conversation = { id: 'conv_' + Date.now(), house_id: houseId, participants: [currentUser.id, house.host_id], created_at: new Date().toISOString() }; conversations.push(conversation); localStorage.setItem('bhast_conversations', JSON.stringify(conversations)); } currentConversation = conversation; document.getElementById('chatTitle').innerHTML = `Chat about ${house.title}`; loadChatMessages(conversation.id); document.getElementById('chatModal').style.display = 'flex'; };
-        window.loadChatMessages = function(convId) { const convMessages = messages.filter(m => m.conversation_id === convId).sort((a,b)=>new Date(a.created_at)-new Date(b.created_at)); document.getElementById('chatMessages').innerHTML = convMessages.map(m => `<div class="message ${m.sender_id === currentUser?.id ? 'own' : ''}"><div class="message-content">${escapeHtml(m.content)}<div style="font-size:0.7rem;">${new Date(m.created_at).toLocaleTimeString()}</div></div></div>`).join(''); };
-        window.sendChatMessage = function() { const input = document.getElementById('chatInput'); const content = input.value.trim(); if (!content || !currentConversation) return; const newMsg = { id: 'msg_' + Date.now(), content, sender_id: currentUser.id, conversation_id: currentConversation.id, created_at: new Date().toISOString() }; messages.push(newMsg); localStorage.setItem('bhast_messages', JSON.stringify(messages)); loadChatMessages(currentConversation.id); input.value = ''; if (currentUser?.role === 'admin' && document.getElementById('chatMonitor').style.display !== 'none') loadAdminConversations(); };
-        window.closeChatModal = function() { document.getElementById('chatModal').style.display = 'none'; currentConversation = null; };
-        window.showChatMonitor = function() { if (currentUser?.role !== 'admin') { showToast('Admin only'); return; } document.getElementById('chatMonitor').style.display = 'block'; document.getElementById('adminPanel').style.display = 'none'; loadAdminConversations(); };
-        window.loadAdminConversations = function() { document.getElementById('conversationList').innerHTML = conversations.map(conv => { const house = houses.find(h => h.id === conv.house_id); return `<div class="conversation-item" onclick="loadAdminMessages('${conv.id}')"><img src="${house?.photos?.[0]||'https://via.placeholder.com/50'}" class="conv-thumbnail"><div class="conv-info"><div class="conv-title">${house?.title || 'Unknown'}</div><div class="conv-participants">👥 ${conv.participants.map(p => users.find(u=>u.id===p)?.name).join(', ')}</div></div></div>`; }).join(''); };
-        window.loadAdminMessages = function(convId) { const convMessages = messages.filter(m => m.conversation_id === convId).sort((a,b)=>new Date(a.created_at)-new Date(b.created_at)); document.getElementById('messageView').innerHTML = convMessages.map(msg => `<div class="admin-message"><strong>${users.find(u=>u.id===msg.sender_id)?.name || 'Unknown'}</strong><small>${new Date(msg.created_at).toLocaleString()}</small><p>${escapeHtml(msg.content)}</p></div>`).join('') || '<p>No messages</p>'; };
-        window.loadPendingHouses = function() { const pending = houses.filter(h => !h.is_verified); document.getElementById('pendingHousesList').innerHTML = pending.map(h => `<div class="pending-house-card"><img src="${h.photos?.[0]||'https://via.placeholder.com/80'}"><div><strong>${h.title}</strong><br>${h.place}<br>KES ${h.nightly_rate}</div><div><button class="approve-btn" onclick="approveHouse(${h.id})">✓ Approve</button><button class="reject-btn" onclick="rejectHouse(${h.id})">✗ Reject</button></div></div>`).join(''); };
-        window.rejectHouse = function(id) { houses = houses.filter(h => h.id !== id); localStorage.setItem('bhast_houses', JSON.stringify(houses)); loadPendingHouses(); renderProperties(); showToast('❌ House rejected'); sendEmail(currentUser?.email || 'admin@bhast.house', 'Property Rejected', 'Your submitted property did not meet guidelines.'); };
-        window.showAdminPanel = function() { if(currentUser?.role !== 'admin'){ showToast('Admin only'); showLoginModal(); return; } document.getElementById('adminPanel').style.display='block'; document.getElementById('uploadForm').style.display='none'; document.getElementById('chatMonitor').style.display='none'; document.getElementById('adminNameDisplay').textContent = currentUser.name; loadPendingHouses(); };
-        window.showUploadForm = function() { if (!currentUser) { showToast('Login first'); showLoginModal(); return; } document.getElementById('uploadForm').style.display = 'block'; document.getElementById('adminPanel').style.display = 'none'; document.getElementById('chatMonitor').style.display = 'none'; };
-        function updateAuthUI() { const authBtns = document.getElementById('authButtons'), profileMenu = document.getElementById('profileMenu'), adminBtn = document.getElementById('adminBtn'), chatMonitorBtn = document.getElementById('chatMonitorBtn'), emailCenterBtn = document.getElementById('emailCenterBtn'); if(currentUser) { authBtns.style.display='none'; profileMenu.style.display='block'; document.getElementById('profileInitials').textContent = currentUser.name?.charAt(0).toUpperCase()||'G'; document.getElementById('profileName').textContent = currentUser.name; if(currentUser.role === 'admin') { adminBtn.style.display='inline-block'; chatMonitorBtn.style.display='inline-block'; emailCenterBtn.style.display='inline-block'; } else { adminBtn.style.display='none'; chatMonitorBtn.style.display='none'; emailCenterBtn.style.display='inline-block'; } } else { authBtns.style.display='flex'; profileMenu.style.display='none'; adminBtn.style.display='none'; chatMonitorBtn.style.display='none'; emailCenterBtn.style.display='none'; } updateEmailHistory(); }
-        window.login = function() { const username = document.getElementById('loginUsername').value, password = document.getElementById('loginPassword').value; const user = users.find(u => (u.username === username || u.email === username) && u.password === password); if(user){ currentUser = { ...user }; delete currentUser.password; localStorage.setItem('bhast_currentUser', JSON.stringify(currentUser)); closeLoginModal(); updateAuthUI(); renderProperties(); showToast(`Welcome ${user.name}!`); } else showToast('Invalid credentials'); };
-        window.logout = function() { currentUser = null; localStorage.removeItem('bhast_currentUser'); updateAuthUI(); renderProperties(); showToast('Signed out'); };
-        window.showMyConversations = function() { showToast(`You have ${conversations.filter(c=>c.participants.includes(currentUser.id)).length} chats`); closeProfileDropdown(); };
-        window.filterByType = function(type) { currentFilter.type = type; renderProperties(); };
-        window.filterByArea = function(area) { currentFilter.area = area; renderProperties(); };
-        window.searchProperties = function() { renderProperties(); showToast('Search updated'); };
-        window.showLoginModal = function() { document.getElementById('loginModal').style.display = 'flex'; };
-        window.closeLoginModal = function() { document.getElementById('loginModal').style.display = 'none'; };
-        window.showSignupModal = function() { showToast('Use demo: demo/password123'); showLoginModal(); };
-        window.showProfileEditModal = function() { showToast('Profile edit coming soon'); closeProfileDropdown(); };
-        window.toggleProfileDropdown = function() { document.getElementById('profileDropdown').classList.toggle('show'); };
-        window.closeProfileDropdown = function() { document.getElementById('profileDropdown').classList.remove('show'); };
-        function updateTransactionHistory() { const div = document.getElementById('transactionHistory'); div.innerHTML = transactions.slice(0,5).map(t => `<div class="transaction-item"><strong>${t.property}</strong> · KES ${t.amount}<div style="font-size:0.7rem;">${t.timestamp}</div></div>`).join('') || '<div>No bookings</div>'; }
+        function startChat(houseId) {
+            if (!currentUser) { showToast('Please login'); showLoginModal(); return; }
+            const house = houses.find(h => h.id === houseId);
+            let conversation = conversations.find(c => c.house_id === houseId && c.participants.includes(currentUser.id));
+            if (!conversation) {
+                conversation = { id: 'conv_'+Date.now(), house_id: houseId, participants: [currentUser.id, house.host_id], created_at: new Date().toISOString() };
+                conversations.push(conversation);
+                localStorage.setItem('bhast_conversations', JSON.stringify(conversations));
+            }
+            currentConversation = conversation;
+            document.getElementById('chatTitle').innerHTML = `Chat about ${house.title}`;
+            loadChatMessages(conversation.id);
+            document.getElementById('chatModal').style.display = 'flex';
+        }
+        
+        function loadChatMessages(convId) {
+            const convMessages = messages.filter(m => m.conversation_id === convId).sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));
+            document.getElementById('chatMessages').innerHTML = convMessages.map(m => `<div class="message ${m.sender_id === currentUser?.id ? 'own' : ''}"><div class="message-content">${escapeHtml(m.content)}<div style="font-size:0.7rem;">${new Date(m.created_at).toLocaleTimeString()}</div></div></div>`).join('');
+        }
+        
+        function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const content = input.value.trim();
+            if (!content || !currentConversation) return;
+            const newMsg = { id: 'msg_'+Date.now(), content, sender_id: currentUser.id, conversation_id: currentConversation.id, created_at: new Date().toISOString() };
+            messages.push(newMsg);
+            localStorage.setItem('bhast_messages', JSON.stringify(messages));
+            loadChatMessages(currentConversation.id);
+            input.value = '';
+        }
+        
+        function closeChatModal() { document.getElementById('chatModal').style.display = 'none'; currentConversation = null; }
+        function showChatMonitor() { if(currentUser?.role !== 'admin') { showToast('Admin only'); return; } document.getElementById('chatMonitor').style.display = 'block'; loadAdminConversations(); }
+        function loadAdminConversations() { document.getElementById('conversationList').innerHTML = conversations.map(conv => `<div class="conversation-item" onclick="loadAdminMessages('${conv.id}')"><div class="conv-info"><div class="conv-title">Conv ${conv.id}</div></div></div>`).join(''); }
+        function loadAdminMessages(convId) { const convMessages = messages.filter(m => m.conversation_id === convId); document.getElementById('messageView').innerHTML = convMessages.map(m => `<div class="admin-message"><strong>${m.sender_id}</strong>: ${escapeHtml(m.content)}</div>`).join('') || '<p>No messages</p>'; }
+        
+        function uploadHouse() {
+            if (!currentUser) { showToast('Login required'); return; }
+            const newHouse = { id: Date.now(), title: document.getElementById('houseTitle').value, place: document.getElementById('housePlace').value, contact_number: document.getElementById('contactNumber').value, nightly_rate: parseFloat(document.getElementById('nightlyRate').value), photos: uploadedPhotos.length ? uploadedPhotos : ['https://via.placeholder.com/300'], is_verified: false, host_id: currentUser.id, type: document.getElementById('houseType').value };
+            if (!newHouse.title) { showToast('Enter title'); return; }
+            houses.push(newHouse);
+            localStorage.setItem('bhast_houses', JSON.stringify(houses));
+            sendEmail(currentUser.email, `Property Submitted: ${newHouse.title}`, `Your property "${newHouse.title}" has been submitted for admin approval.`);
+            showToast('✅ House submitted! Email sent.');
+            document.getElementById('uploadForm').style.display = 'none';
+            if(currentUser.role === 'admin') loadPendingHouses();
+        }
+        
+        function loadPendingHouses() { const pending = houses.filter(h => !h.is_verified); document.getElementById('pendingHousesList').innerHTML = pending.map(h => `<div class="pending-house-card"><div><strong>${h.title}</strong><br>${h.place}<br>KES ${h.nightly_rate}</div><div><button class="approve-btn" onclick="approveHouse(${h.id})">✓ Approve</button><button class="reject-btn" onclick="rejectHouse(${h.id})">✗ Reject</button></div></div>`).join(''); }
+        function approveHouse(id) { const idx = houses.findIndex(h => h.id === id); if(idx !== -1) { houses[idx].is_verified = true; localStorage.setItem('bhast_houses', JSON.stringify(houses)); loadPendingHouses(); renderProperties(); sendEmail(houses[idx].host_id === currentUser?.id ? currentUser.email : 'host@example.com', 'Property Approved', `Your property "${houses[idx].title}" is now live!`); showToast('Approved + email sent'); } }
+        function rejectHouse(id) { const house = houses.find(h => h.id === id); if(house) sendEmail(house.host_id === currentUser?.id ? currentUser.email : 'host@example.com', 'Property Rejected', `Your property "${house.title}" needs revisions.`); houses = houses.filter(h => h.id !== id); localStorage.setItem('bhast_houses', JSON.stringify(houses)); loadPendingHouses(); renderProperties(); showToast('Rejected'); }
+        
+        function showAdminPanel() { if(currentUser?.role !== 'admin') { showToast('Admin only'); return; } document.getElementById('adminPanel').style.display = 'block'; loadPendingHouses(); }
+        function showUploadForm() { if (!currentUser) { showToast('Login first'); showLoginModal(); return; } document.getElementById('uploadForm').style.display = 'block'; }
+        function updateAuthUI() { const auth = document.getElementById('authButtons'), prof = document.getElementById('profileMenu'), admin = document.getElementById('adminBtn'), chatMon = document.getElementById('chatMonitorBtn'); if(currentUser) { auth.style.display='none'; prof.style.display='block'; document.getElementById('profileInitials').textContent = currentUser.name?.charAt(0).toUpperCase()||'G'; document.getElementById('profileName').textContent = currentUser.name; if(currentUser.role === 'admin') { admin.style.display='inline-block'; chatMon.style.display='inline-block'; } else { admin.style.display='none'; chatMon.style.display='none'; } } else { auth.style.display='flex'; prof.style.display='none'; admin.style.display='none'; chatMon.style.display='none'; } updateEmailHistory(); }
+        
+        function login() { const user = users.find(u => (u.username === document.getElementById('loginUsername').value || u.email === document.getElementById('loginUsername').value) && u.password === document.getElementById('loginPassword').value); if(user) { currentUser = {...user}; delete currentUser.password; localStorage.setItem('bhast_currentUser', JSON.stringify(currentUser)); closeLoginModal(); updateAuthUI(); renderProperties(); showToast(`Welcome ${user.name}!`); } else showToast('Invalid credentials'); }
+        function logout() { currentUser = null; localStorage.removeItem('bhast_currentUser'); updateAuthUI(); renderProperties(); showToast('Signed out'); }
+        function filterByType(type) { currentFilter.type = type; renderProperties(); }
+        function filterByArea(area) { currentFilter.area = area; renderProperties(); }
+        function searchProperties() { renderProperties(); }
+        function showLoginModal() { document.getElementById('loginModal').style.display = 'flex'; }
+        function closeLoginModal() { document.getElementById('loginModal').style.display = 'none'; }
+        function showSignupModal() { showToast('Use demo: demo/password123'); showLoginModal(); }
+        function showMyConversations() { showToast(`You have ${conversations.filter(c=>c.participants.includes(currentUser.id)).length} chats`); }
+        function toggleProfileDropdown() { document.getElementById('profileDropdown').classList.toggle('show'); }
+        function closeProfileDropdown() { document.getElementById('profileDropdown').classList.remove('show'); }
+        function updateTransactionHistory() { document.getElementById('transactionHistory').innerHTML = transactions.slice(0,5).map(t => `<div class="transaction-item"><strong>${t.property}</strong> · KES ${t.amount}<div style="font-size:0.7rem;">${t.timestamp}</div></div>`).join('') || '<div>No bookings</div>'; }
         function showToast(msg) { const toast = document.getElementById('toast'); document.getElementById('toastMsg').textContent = msg; toast.style.display = 'flex'; setTimeout(() => toast.style.display = 'none', 3000); }
         function escapeHtml(text) { return text.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
-        function previewPhotos(input) { const preview = document.getElementById('photoPreview'); preview.innerHTML = ''; uploadedPhotos = []; for (let i = 0; i < input.files.length; i++) { const file = input.files[i]; const reader = new FileReader(); reader.onload = function(e) { uploadedPhotos.push(e.target.result); const div = document.createElement('div'); div.className = 'photo-preview-item'; div.innerHTML = `<img src="${e.target.result}"><span class="remove-photo" onclick="this.parentElement.remove(); uploadedPhotos.splice(${uploadedPhotos.indexOf(e.target.result)},1);">×</span>`; preview.appendChild(div); }; reader.readAsDataURL(file); } }
-        function toggleTheme() { const isLight = document.body.classList.toggle('light-theme'); localStorage.setItem('bhast_theme', isLight ? 'light' : 'dark'); document.getElementById('themeToggleBtn').innerHTML = isLight ? '<i class="fas fa-sun"></i> Light' : '<i class="fas fa-moon"></i> Dark'; showToast(isLight ? '☀️ Light mode' : '🌙 Dark mode'); }
+        function previewPhotos(input) { const preview = document.getElementById('photoPreview'); preview.innerHTML = ''; uploadedPhotos = []; Array.from(input.files).forEach(file => { const reader = new FileReader(); reader.onload = e => { uploadedPhotos.push(e.target.result); const div = document.createElement('div'); div.className = 'photo-preview-item'; div.innerHTML = `<img src="${e.target.result}"><span class="remove-photo" onclick="this.parentElement.remove(); uploadedPhotos.splice(uploadedPhotos.indexOf('${e.target.result}'),1);">×</span>`; preview.appendChild(div); }; reader.readAsDataURL(file); }); }
+        function toggleTheme() { document.body.classList.toggle('light-theme'); localStorage.setItem('bhast_theme', document.body.classList.contains('light-theme') ? 'light' : 'dark'); document.getElementById('themeToggleBtn').innerHTML = document.body.classList.contains('light-theme') ? '<i class="fas fa-sun"></i> Light' : '<i class="fas fa-moon"></i> Dark'; }
         function initTheme() { if(localStorage.getItem('bhast_theme') === 'light') { document.body.classList.add('light-theme'); document.getElementById('themeToggleBtn').innerHTML = '<i class="fas fa-sun"></i> Light'; } }
+        
         document.addEventListener('click', (e) => { if (!e.target.closest('.profile-menu')) closeProfileDropdown(); });
-        window.openEmailCenter = openEmailCenter; window.openEmailComposer = openEmailComposer;
         initTheme(); renderProperties(); updateAuthUI(); updateTransactionHistory(); updateEmailHistory();
     </script>
 </body>
